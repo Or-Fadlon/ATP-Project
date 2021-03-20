@@ -1,12 +1,21 @@
 package algorithms.mazeGenerators;
 
-public class SimpleMazeGenerator extends AMazeGenerator {
+import java.util.Random;
 
-    public SimpleMazeGenerator() {
-    }
+public class SimpleMazeGenerator extends AMazeGenerator {
 
     @Override
     public Maze generate(int rows, int columns) {
-        return null;
+        Maze maze = new Maze(rows, columns);
+
+        Random random = new Random();
+            for (int i = 1; i < rows; i++) {
+                maze.addWall(i, random.nextInt(columns - 1));
+            }
+            maze.setStartPosition(new Position(0, random.nextInt(columns - 1)));
+            maze.setGoalPosition(new Position(random.nextInt(rows - 1) + 1, columns - 1));
+
+        return maze;
     }
 }
+
