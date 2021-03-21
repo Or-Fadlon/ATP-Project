@@ -6,19 +6,19 @@ package algorithms.mazeGenerators;
  * the values of the row and column are Natural number.
  */
 public class Position {
-    private int x, y;
+    private int column, row;
 
     /**
      * constructor
      *
-     * @param x column - Natural number.
-     * @param y row - Natural number.
+     * @param column column - Natural number.
+     * @param row row - Natural number.
      */
-    public Position(int x, int y) {
-        if (x < 0 || y < 0)
+    public Position(int row, int column) {
+        if (column < 0 || row < 0)
             throw new IllegalArgumentException("one or more of the arguments are not Natural number");
-        this.x = x;
-        this.y = y;
+        this.column = column;
+        this.row = row;
     }
 
     /**
@@ -27,15 +27,15 @@ public class Position {
      * @param other Position to copy
      */
     public Position(Position other) {
-        this.x = other.x;
-        this.y = other.y;
+        this.column = other.column;
+        this.row = other.row;
     }
 
     /**
      * @return column index of the Position
      */
     public int getColumnIndex() {
-        return x;
+        return column;
     }
 
     /**
@@ -46,14 +46,14 @@ public class Position {
     public void setRow(int row) {
         if (row < 0)
             throw new IllegalArgumentException("the argument are not Natural number");
-        this.x = row;
+        this.column = row;
     }
 
     /**
      * @return row index of the Position
      */
     public int getRowIndex() {
-        return y;
+        return row;
     }
 
     /**
@@ -64,11 +64,11 @@ public class Position {
     public void setColumn(int column) {
         if (column < 0)
             throw new IllegalArgumentException("the argument are not Natural number");
-        this.y = column;
+        this.row = column;
     }
 
     @Override
     public String toString() {
-        return "{" + this.y + "," + this.x + "}";
+        return "{" + this.row + "," + this.column + "}";
     }
 }
