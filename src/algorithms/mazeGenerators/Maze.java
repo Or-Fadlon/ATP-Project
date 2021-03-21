@@ -10,8 +10,8 @@ public class Maze {
         if (columns < 2 || rows < 2)
             throw new IllegalArgumentException("one or more of the arguments are < 2");
         this.grid = new int[rows][columns];
-        this.startPosition = new Position(0, 0);
-        this.goalPosition = new Position(columns - 1, rows - 1);
+        this.startPosition = new Position(0, 1);
+        this.goalPosition = new Position(rows - 1, columns - 2);
     }
 
     public void print() {

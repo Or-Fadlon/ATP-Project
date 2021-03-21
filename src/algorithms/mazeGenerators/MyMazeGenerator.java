@@ -1,50 +1,81 @@
 package algorithms.mazeGenerators;
 
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Stack;
 
 public class MyMazeGenerator extends AMazeGenerator {
 
-    static Position getUnvisitedNeighbour(int[][] visited, Position position) {
-        Random rand = new Random();
-        int x = position.getColumnIndex(), y = position.getRowIndex();
-        Position[] unvisited = new Position[4];
-        int unvisitedCounter = 0;
-        if (x + 1 < visited.length && visited[x + 2][y] == 0)
-            unvisited[unvisitedCounter++] = new Position(x + 1, y);
-        if (x - 1 >= 0 && visited[x - 1][y] == 0)
-            unvisited[unvisitedCounter++] = new Position(x - 1, y);
-        if (y + 1 < visited[0].length && visited[x][y + 2] == 0)
-            unvisited[unvisitedCounter++] = new Position(x, y + 1);
-        if (y - 1 >= 0 && visited[x][y - 1] == 0)
-            unvisited[unvisitedCounter++] = new Position(x, y - 1);
-
-        if (unvisitedCounter == 0)
-            return null;
-        else
-            return unvisited[rand.nextInt(unvisitedCounter)];
+    static ArrayList<Position> getNeighbourWalls(Maze maze, Position currentPosition) {
+        ArrayList<Position> wallsList = new ArrayList<>();
+        int columnIndex = currentPosition.getColumnIndex(), rowIndex = currentPosition.getRowIndex();
+        if (rowIndex + 1 < maze.getRowsSize() && maze.positionOfWall(rowIndex + 1, columnIndex))
+            wallsList.add(new Position(rowIndex + 1, columnIndex));
+        if (columnIndex + 1 < maze.getColumnsSize() && maze.positionOfWall(rowIndex, columnIndex + 1))
+            wallsList.add(new Position(rowIndex, columnIndex + 1));
+        if (rowIndex - 1 >= 0 && maze.positionOfWall(rowIndex - 1, columnIndex))
+            wallsList.add(new Position(rowIndex - 1, columnIndex));
+        if (columnIndex - 1 >= 0 && maze.positionOfWall(rowIndex, columnIndex - 1))
+            wallsList.add(new Position(rowIndex, columnIndex - 1));
+        return wallsList;
     }
 
+    private static ArrayList<Position> getNeighbourTiles(Maze maze, Position currentPosition) {
+        ArrayList<Position> tilesList = new ArrayList<>();
+        int columnIndex = currentPosition.getColumnIndex(), rowIndex = currentPosition.getRowIndex();
+        if (rowIndex + 1 < maze.getRowsSize() && maze.positionOfTile(rowIndex + 1, columnIndex))
+            tilesList.add(new Position(rowIndex + 1, columnIndex));
+        if (columnIndex + 1 < maze.getColumnsSize() && maze.positionOfTile(rowIndex, columnIndex + 1))
+            tilesList.add(new Position(rowIndex, columnIndex + 1));
+        if (rowIndex - 1 >= 0 && maze.positionOfTile(rowIndex - 1, columnIndex))
+            tilesList.add(new Position(rowIndex - 1, columnIndex));
+        if (columnIndex - 1 >= 0 && maze.positionOfTile(rowIndex, columnIndex - 1))
+            tilesList.add(new Position(rowIndex, columnIndex - 1));
+        return tilesList;
+    }
+
+    private static void connectNeighbours(Maze maze, Position currentPosition, Position neighbour) {
+        if (currentPosition.getColumnIndex() == neighbour.getColumnIndex()) {
+            maze.removeWall(new Position(Math.min(neighbour.getRowIndex(), currentPosition.getRowIndex()) + 1, currentPosition.getColumnIndex()));
+        } else if (currentPosition.getRowIndex() == neighbour.getRowIndex()) {
+            maze.removeWall(new Position(currentPosition.getRowIndex(), Math.min(neighbour.getColumnIndex(), currentPosition.getColumnIndex()) + 1));
+        }
+    }
+
+    /***
+     * 1. Start with a grid full of walls.
+     * 2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
+     * 3. While there are walls in the list:
+     *      3.1. Pick a random wall from the list.
+     *      If only one of the two cells that the wall divides is visited, then:
+     *          3.1.1. Make the wall a passage and mark the unvisited cell as part of the maze.
+     *          3.1.2. Add the neighboring walls of the cell to the wall list.
+     *      3.2. Remove the wall from the list.
+     * @param rows number of rows of the maze to generate
+     * @param columns number of columns of the maze to generate
+     * @return generated maze
+     */
     @Override
     public Maze generate(int rows, int columns) {
+        Random random = new Random();
         Maze maze = new Maze(rows, columns);
-        Stack<Position> stack = new Stack<>();
-        int[][] visited = new int[rows][columns];
-        Position position = maze.getStartPosition(), unvisitedNeighbour;
+        maze.makeAllWalls(); //1
+        ArrayList<Position> wallsList = new ArrayList<>();
 
-        maze.makeAllWalls();
-        visited[position.getRowIndex()][position.getColumnIndex()] = 1;
-        stack.push(position);
-        while (!stack.isEmpty()) {
-            position = stack.pop();
-            unvisitedNeighbour = getUnvisitedNeighbour(visited, position);
-            if (unvisitedNeighbour != null) {
-                visited[unvisitedNeighbour.getRowIndex()][unvisitedNeighbour.getColumnIndex()] = 1;
-                maze.removeWall(unvisitedNeighbour.getRowIndex(), unvisitedNeighbour.getColumnIndex());
-                stack.push(unvisitedNeighbour);
-                stack.push(position);
+        Position currentPosition = maze.getStartPosition();
+        maze.removeWall(currentPosition);
+        wallsList.addAll(getNeighbourWalls(maze, currentPosition)); //2
+        while (!wallsList.isEmpty()) { //3
+            currentPosition = wallsList.remove(random.nextInt(wallsList.size()));
+            ArrayList<Position> neighbourTiles = getNeighbourTiles(maze, currentPosition);
+            if (neighbourTiles.size() == 1) { //3.1
+                Position neighbour = neighbourTiles.get(random.nextInt(neighbourTiles.size()));
+                maze.removeWall(currentPosition);
+                connectNeighbours(maze, currentPosition, neighbour);
+                wallsList.addAll(getNeighbourWalls(maze, currentPosition));
             }
         }
+
+
         return maze;
     }
 }
