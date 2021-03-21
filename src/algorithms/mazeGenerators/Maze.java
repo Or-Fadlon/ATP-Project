@@ -1,7 +1,5 @@
 package algorithms.mazeGenerators;
 
-import java.util.Arrays;
-
 public class Maze {
     private static final int WALL = 1, TILE = 0;
     protected Position startPosition, goalPosition;
@@ -9,8 +7,8 @@ public class Maze {
 
 
     public Maze(int rows, int columns) {
-        if (columns < 3 || rows < 3)
-            throw new IllegalArgumentException("one or more of the arguments are < 3");
+        if (columns < 2 || rows < 2)
+            throw new IllegalArgumentException("one or more of the arguments are < 2");
         this.grid = new int[rows][columns];
         this.startPosition = new Position(0, 0);
         this.goalPosition = new Position(columns - 1, rows - 1);
