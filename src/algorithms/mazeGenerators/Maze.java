@@ -17,7 +17,7 @@ public class Maze {
     public void print() {
         for (int[] arr : this.grid) {
             for (int i : arr) {
-                System.out.print("" + i + " ");
+                System.out.print("" + (i == 1 ? "█" : " ") + " ");
             }
             System.out.println();
         }
@@ -79,5 +79,13 @@ public class Maze {
             return true;
         }
         return false;
+    }
+
+    public int getRowsSize() {
+        return grid.length;
+    }
+
+    public int getColumnsSize() {
+        return grid[0].length;
     }
 }
