@@ -10,7 +10,7 @@ public class SimpleMazeGenerator extends AMazeGenerator {
 
         Random random = new Random();
             for (int i = 1; i < rows; i++) {
-                maze.addWall(i, random.nextInt(columns - 1));
+                maze.addWall(new Position(i, random.nextInt(columns - 1)));
             }
             maze.setStartPosition(new Position(0, random.nextInt(columns - 1)));
             maze.setGoalPosition(new Position(random.nextInt(rows - 1) + 1, columns - 1));

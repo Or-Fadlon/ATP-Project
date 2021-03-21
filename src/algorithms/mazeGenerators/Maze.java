@@ -2,8 +2,8 @@ package algorithms.mazeGenerators;
 
 public class Maze {
     private static final int WALL = 1, TILE = 0;
-    protected Position startPosition, goalPosition;
-    protected int[][] grid;
+    private Position startPosition, goalPosition;
+    private int[][] grid;
 
 
     public Maze(int rows, int columns) {
@@ -65,17 +65,17 @@ public class Maze {
                 this.grid[i][j] = WALL;
     }
 
-    public boolean addWall(int row, int column) {
-        if (this.grid[row][column] == TILE) {
-            this.grid[row][column] = WALL;
+    public boolean addWall(Position position) {
+        if (this.grid[position.getRowIndex()][position.getColumnIndex()] == TILE) {
+            this.grid[position.getRowIndex()][position.getColumnIndex()] = WALL;
             return true;
         }
         return false;
     }
 
-    public boolean removeWall(int row, int column) {
-        if (this.grid[row][column] == WALL) {
-            this.grid[row][column] = TILE;
+    public boolean removeWall(Position position) {
+        if (this.grid[position.getRowIndex()][position.getColumnIndex()] == WALL) {
+            this.grid[position.getRowIndex()][position.getColumnIndex()] = TILE;
             return true;
         }
         return false;
