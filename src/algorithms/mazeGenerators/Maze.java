@@ -79,20 +79,12 @@ public class Maze {
                 this.grid[i][j] = WALL;
     }
 
-    public boolean addWall(Position position) {
-        if (this.grid[position.getRowIndex()][position.getColumnIndex()] == TILE) {
+    public void addWall(Position position) {
             this.grid[position.getRowIndex()][position.getColumnIndex()] = WALL;
-            return true;
-        }
-        return false;
     }
 
-    public boolean removeWall(Position position) {
-        if (this.grid[position.getRowIndex()][position.getColumnIndex()] == WALL) {
+    public void removeWall(Position position) {
             this.grid[position.getRowIndex()][position.getColumnIndex()] = TILE;
-            return true;
-        }
-        return false;
     }
 
     public int getRowsSize() {
