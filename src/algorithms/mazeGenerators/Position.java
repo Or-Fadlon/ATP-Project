@@ -12,11 +12,11 @@ public class Position {
      * constructor
      *
      * @param column column - Natural number.
-     * @param row row - Natural number.
+     * @param row    row - Natural number.
      */
     public Position(int row, int column) {
-        if (column < 0 || row < 0)
-            throw new IllegalArgumentException("one or more of the arguments are not Natural number");
+//        if (column < 0 || row < 0)
+//            throw new IllegalArgumentException("one or more of the arguments are not Natural number");
         this.column = column;
         this.row = row;
     }
@@ -65,6 +65,22 @@ public class Position {
         if (column < 0)
             throw new IllegalArgumentException("the argument are not Natural number");
         this.row = column;
+    }
+
+    public Position getUpPosition() {
+        return new Position(this.row - 1, this.column);
+    }
+
+    public Position getRightPosition() {
+        return new Position(this.row, this.column + 1);
+    }
+
+    public Position getDownPosition() {
+        return new Position(this.row + 1, this.column);
+    }
+
+    public Position getLeftPosition() {
+        return new Position(this.row, this.column - 1);
     }
 
     @Override

@@ -16,19 +16,25 @@ public class Maze {
         this.goalPosition = new Position(rows - 1, columns - 1);
     }
 
+    //TODO: remove colors!!
     public void print() {
+        final String RED = "\033[0;31m"; //REMOVE
+        final String GREEN = "\033[0;32m"; //REMOVE
+        final String RESET = "\033[0m"; //REMOVE
         for (int i = 0; i < this.getRowsSize(); i++) {
             System.out.print("{");
             for (int j = 0; j < this.getColumnsSize(); j++) {
                 if (this.startPosition.equals(new Position(i, j)))
-                    System.out.print(" S");
+                    System.out.print(GREEN + " S" + RESET);
                 else if (this.goalPosition.equals(new Position(i, j)))
-                    System.out.print(" E");
+                    System.out.print(RED + " E" + RESET);
                 else
-                    System.out.print(" " + this.grid[i][j]);
+                    System.out.print(" " + (this.grid[i][j] == 1 ? "B" : " "));
             }
             System.out.println(" }");
         }
+        if (this.positionOfWall(this.startPosition) || this.positionOfWall(this.goalPosition)) //REMOVE
+            System.out.println("*****HOOOOO NOOOO******"); //REMOVE
     }
 
     /**
@@ -53,8 +59,8 @@ public class Maze {
         this.goalPosition = new Position(position);
     }
 
-    public boolean positionOfWall(int row, int column) {
-        return this.grid[row][column] == WALL;
+    public boolean positionOfWall(Position position) {
+        return this.grid[position.getRowIndex()][position.getColumnIndex()] == WALL;
     }
 
     public boolean positionOfTile(int row, int column) {
@@ -97,51 +103,34 @@ public class Maze {
         return grid[0].length;
     }
 
-    public Position generateStartPosition() {
+    public boolean validMazePosition(Position position) {
+        return (0 <= position.getRowIndex() && position.getRowIndex() < this.getRowsSize() &&
+                0 <= position.getColumnIndex() && position.getColumnIndex() < this.getColumnsSize());
+    }
+
+    public void generateStartPosition() {
         Random random = new Random();
         int side = random.nextInt(4);
         switch (side) {
-            case 0:
-                this.setStartPosition(new Position(0, random.nextInt(this.getColumnsSize() - 2) + 1));
-                return new Position(this.getStartPosition().getRowIndex() + 1, this.getStartPosition().getColumnIndex());
-            case 1:
-                this.setStartPosition(new Position(random.nextInt(this.getRowsSize() - 2) + 1, this.getColumnsSize() - 1));
-                return new Position(this.getStartPosition().getRowIndex(), this.getStartPosition().getColumnIndex() - 1);
-            case 2:
-                this.setStartPosition(new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize() - 2) + 1));
-                return new Position(this.getStartPosition().getRowIndex() - 1, this.getStartPosition().getColumnIndex());
-            case 3:
-                this.setStartPosition(new Position(random.nextInt(this.getRowsSize() - 2) + 1, 0));
-                return new Position(this.getStartPosition().getRowIndex(), this.getStartPosition().getColumnIndex() + 1);
-            default:
-                return null;
+            case 0 -> this.setStartPosition(new Position(0, random.nextInt(this.getColumnsSize())));
+            case 1 -> this.setStartPosition(new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1));
+            case 2 -> this.setStartPosition(new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())));
+            case 3 -> this.setStartPosition(new Position(random.nextInt(this.getRowsSize()), 0));
+            default -> this.setStartPosition(new Position(0, 0));
         }
     }
 
     public void generateGoalPosition() {
         Random random = new Random();
         int side = random.nextInt(4);
-        switch (side) {
-            case 0:
-                do
-                    this.setGoalPosition(new Position(0, random.nextInt(this.getColumnsSize() - 2) + 1));
-                while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition().getRowIndex() + 1, this.getGoalPosition().getColumnIndex()));
-                break;
-            case 1:
-                do
-                    this.setGoalPosition(new Position(random.nextInt(this.getRowsSize() - 2) + 1, this.getColumnsSize() - 1));
-                while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition().getRowIndex(), this.getGoalPosition().getColumnIndex() - 1));
-                break;
-            case 2:
-                do
-                    this.setGoalPosition(new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize() - 2) + 1));
-                while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition().getRowIndex() - 1, this.getGoalPosition().getColumnIndex()));
-                break;
-            case 3:
-                do
-                    this.setGoalPosition(new Position(random.nextInt(this.getRowsSize() - 2) + 1, 0));
-                while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition().getRowIndex(), this.getGoalPosition().getColumnIndex() + 1));
-                break;
+        do {
+            switch (side) {
+                case 0 -> this.setGoalPosition(new Position(0, random.nextInt(this.getColumnsSize())));
+                case 1 -> this.setGoalPosition(new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1));
+                case 2 -> this.setGoalPosition(new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())));
+                case 3 -> this.setGoalPosition(new Position(random.nextInt(this.getRowsSize()), 0));
+            }
         }
+        while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition()));
     }
 }

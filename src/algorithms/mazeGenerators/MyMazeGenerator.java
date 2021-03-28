@@ -7,15 +7,16 @@ public class MyMazeGenerator extends AMazeGenerator {
 
     static ArrayList<Position> getNeighbourWalls(Maze maze, Position currentPosition) {
         ArrayList<Position> wallsList = new ArrayList<>();
-        int columnIndex = currentPosition.getColumnIndex(), rowIndex = currentPosition.getRowIndex();
-        if (rowIndex + 1 < maze.getRowsSize() - 1 && maze.positionOfWall(rowIndex + 1, columnIndex))
-            wallsList.add(new Position(rowIndex + 1, columnIndex));
-        if (columnIndex + 1 < maze.getColumnsSize() - 1 && maze.positionOfWall(rowIndex, columnIndex + 1))
-            wallsList.add(new Position(rowIndex, columnIndex + 1));
-        if (rowIndex - 1 >= 1 && maze.positionOfWall(rowIndex - 1, columnIndex))
-            wallsList.add(new Position(rowIndex - 1, columnIndex));
-        if (columnIndex - 1 >= 1 && maze.positionOfWall(rowIndex, columnIndex - 1))
-            wallsList.add(new Position(rowIndex, columnIndex - 1));
+        if (maze.validMazePosition(currentPosition)) {
+            if (maze.validMazePosition(currentPosition.getUpPosition()) && maze.positionOfWall(currentPosition.getUpPosition()))
+                wallsList.add(currentPosition.getUpPosition());
+            if (maze.validMazePosition(currentPosition.getDownPosition()) && maze.positionOfWall(currentPosition.getDownPosition()))
+                wallsList.add(currentPosition.getDownPosition());
+            if (maze.validMazePosition(currentPosition.getLeftPosition()) && maze.positionOfWall(currentPosition.getLeftPosition()))
+                wallsList.add(currentPosition.getLeftPosition());
+            if (maze.validMazePosition(currentPosition.getRightPosition()) && maze.positionOfWall(currentPosition.getRightPosition()))
+                wallsList.add(currentPosition.getRightPosition());
+        }
         return wallsList;
     }
 
@@ -60,8 +61,8 @@ public class MyMazeGenerator extends AMazeGenerator {
         Maze maze = new Maze(rows, columns);
         maze.makeAllWalls(); //1
         ArrayList<Position> wallsList = new ArrayList<>();
-
-        Position currentPosition = maze.generateStartPosition();
+        maze.generateStartPosition();
+        Position currentPosition = maze.getStartPosition();
         if (currentPosition == null)
             throw new RuntimeException("Expected for startPosition but null was return");
         maze.removeWall(maze.getStartPosition());
