@@ -7,14 +7,30 @@ public class SimpleMazeGenerator extends AMazeGenerator {
     @Override
     public Maze generate(int rows, int columns) {
         Maze maze = new Maze(rows, columns);
-
         Random random = new Random();
-            for (int i = 1; i < rows; i++) {
-                maze.addWall(new Position(i, random.nextInt(columns - 1)));
+        Position currentPosition;
+        maze.generateStartPosition();
+        maze.generateGoalPosition();
+        maze.makeAllWalls();
+        currentPosition = maze.getStartPosition();
+        maze.removeWall(currentPosition);
+        maze.removeWall(maze.getGoalPosition());
+        while (!currentPosition.equals(maze.getGoalPosition())) {
+            if (random.nextInt(2) == 0) {
+                if (currentPosition.getRowIndex() > maze.getGoalPosition().getRowIndex())
+                    currentPosition = currentPosition.getUpPosition();
+                if (currentPosition.getRowIndex() < maze.getGoalPosition().getRowIndex())
+                    currentPosition = currentPosition.getDownPosition();
+                maze.removeWall(currentPosition);
             }
-            maze.setStartPosition(new Position(0, random.nextInt(columns - 1)));
-            maze.setGoalPosition(new Position(random.nextInt(rows - 1) + 1, columns - 1));
-
+            else {
+                if (currentPosition.getColumnIndex() > maze.getGoalPosition().getColumnIndex())
+                    currentPosition = currentPosition.getLeftPosition();
+                if (currentPosition.getColumnIndex() < maze.getGoalPosition().getColumnIndex())
+                    currentPosition = currentPosition.getRightPosition();
+                maze.removeWall(currentPosition);
+            }
+        }
         return maze;
     }
 }
