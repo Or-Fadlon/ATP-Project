@@ -63,8 +63,6 @@ public class MyMazeGenerator extends AMazeGenerator {
         ArrayList<Position> wallsList = new ArrayList<>();
         maze.generateStartPosition();
         Position currentPosition = maze.getStartPosition();
-        if (currentPosition == null)
-            throw new RuntimeException("Expected for startPosition but null was return");
         maze.removeWall(maze.getStartPosition());
         maze.removeWall(currentPosition);
         wallsList.addAll(getNeighbourWalls(maze, currentPosition)); //2
