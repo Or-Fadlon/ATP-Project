@@ -22,13 +22,18 @@ public class SimpleMazeGenerator extends AMazeGenerator {
                 if (currentPosition.getRowIndex() < maze.getGoalPosition().getRowIndex())
                     currentPosition = currentPosition.getDownPosition();
                 maze.removeWall(currentPosition);
-            }
-            else {
+            } else {
                 if (currentPosition.getColumnIndex() > maze.getGoalPosition().getColumnIndex())
                     currentPosition = currentPosition.getLeftPosition();
                 if (currentPosition.getColumnIndex() < maze.getGoalPosition().getColumnIndex())
                     currentPosition = currentPosition.getRightPosition();
                 maze.removeWall(currentPosition);
+            }
+        }
+        for (int i = 0; i < maze.getRowsSize(); i++) {
+            for (int j = 0; j < maze.getColumnsSize(); j++) {
+                if (random.nextInt(2) == 0)
+                    maze.removeWall(new Position(i, j));
             }
         }
         return maze;
