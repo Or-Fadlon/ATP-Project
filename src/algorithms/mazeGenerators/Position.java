@@ -21,6 +21,16 @@ public class Position {
         this.row = row;
     }
 
+    /***
+     * constructor
+     * @param str format: {row,column}
+     */
+    public Position(String str) {
+        String[] parts = str.split(",");
+        this.row = Integer.parseInt(parts[0].substring(1));
+        this.column = Integer.parseInt(parts[1].substring(0, parts[1].length() - 1));
+    }
+
     /**
      * copy constructor
      *
@@ -71,16 +81,32 @@ public class Position {
         return new Position(this.row - 1, this.column);
     }
 
+    public Position getUpRightPosition() {
+        return new Position(this.row - 1, this.column + 1);
+    }
+
     public Position getRightPosition() {
         return new Position(this.row, this.column + 1);
+    }
+
+    public Position getDownRightPosition() {
+        return new Position(this.row + 1, this.column + 1);
     }
 
     public Position getDownPosition() {
         return new Position(this.row + 1, this.column);
     }
 
+    public Position getDownLeftPosition() {
+        return new Position(this.row + 1, this.column - 1);
+    }
+
     public Position getLeftPosition() {
         return new Position(this.row, this.column - 1);
+    }
+
+    public Position getUpLeftPosition() {
+        return new Position(this.row - 1, this.column - 1);
     }
 
     @Override
