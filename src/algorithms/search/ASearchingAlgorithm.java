@@ -1,10 +1,15 @@
 package algorithms.search;
 
 public abstract class ASearchingAlgorithm  implements ISearchingAlgorithm {
+    private String name;
+
+    public ASearchingAlgorithm(String name) {
+        this.name = name;
+    }
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     @Override
