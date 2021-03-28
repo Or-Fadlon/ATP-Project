@@ -8,13 +8,13 @@ public class MyMazeGenerator extends AMazeGenerator {
     static ArrayList<Position> getNeighbourWalls(Maze maze, Position currentPosition) {
         ArrayList<Position> wallsList = new ArrayList<>();
         int columnIndex = currentPosition.getColumnIndex(), rowIndex = currentPosition.getRowIndex();
-        if (rowIndex + 1 < maze.getRowsSize() && maze.positionOfWall(rowIndex + 1, columnIndex))
+        if (rowIndex + 1 < maze.getRowsSize() - 1 && maze.positionOfWall(rowIndex + 1, columnIndex))
             wallsList.add(new Position(rowIndex + 1, columnIndex));
-        if (columnIndex + 1 < maze.getColumnsSize() && maze.positionOfWall(rowIndex, columnIndex + 1))
+        if (columnIndex + 1 < maze.getColumnsSize() - 1 && maze.positionOfWall(rowIndex, columnIndex + 1))
             wallsList.add(new Position(rowIndex, columnIndex + 1));
-        if (rowIndex - 1 >= 0 && maze.positionOfWall(rowIndex - 1, columnIndex))
+        if (rowIndex - 1 >= 1 && maze.positionOfWall(rowIndex - 1, columnIndex))
             wallsList.add(new Position(rowIndex - 1, columnIndex));
-        if (columnIndex - 1 >= 0 && maze.positionOfWall(rowIndex, columnIndex - 1))
+        if (columnIndex - 1 >= 1 && maze.positionOfWall(rowIndex, columnIndex - 1))
             wallsList.add(new Position(rowIndex, columnIndex - 1));
         return wallsList;
     }
@@ -41,6 +41,54 @@ public class MyMazeGenerator extends AMazeGenerator {
         }
     }
 
+    private static Position generateStartPosition(Maze maze) {
+        Random random = new Random();
+        int side = random.nextInt(4);
+        switch (side) {
+            case 0:
+                maze.setStartPosition(new Position(0, random.nextInt(maze.getColumnsSize() - 2) + 1));
+                return new Position(maze.getStartPosition().getRowIndex() + 1, maze.getStartPosition().getColumnIndex());
+            case 1:
+                maze.setStartPosition(new Position(random.nextInt(maze.getRowsSize() - 2) + 1, maze.getColumnsSize() - 1));
+                return new Position(maze.getStartPosition().getRowIndex(), maze.getStartPosition().getColumnIndex() - 1);
+            case 2:
+                maze.setStartPosition(new Position(maze.getRowsSize() - 1, random.nextInt(maze.getColumnsSize() - 2) + 1));
+                return new Position(maze.getStartPosition().getRowIndex() - 1, maze.getStartPosition().getColumnIndex());
+            case 3:
+                maze.setStartPosition(new Position(random.nextInt(maze.getRowsSize() - 2) + 1, 0));
+                return new Position(maze.getStartPosition().getRowIndex(), maze.getStartPosition().getColumnIndex() + 1);
+            default:
+                return null;
+        }
+    }
+
+    private static void generateGoalPosition(Maze maze) {
+        Random random = new Random();
+        int side = random.nextInt(4);
+        switch (side) {
+            case 0:
+                do
+                    maze.setGoalPosition(new Position(0, random.nextInt(maze.getColumnsSize() - 2) + 1));
+                while (maze.getStartPosition().equals(maze.getGoalPosition()) || maze.positionOfWall(maze.getGoalPosition().getRowIndex() + 1, maze.getGoalPosition().getColumnIndex()));
+                break;
+            case 1:
+                do
+                    maze.setGoalPosition(new Position(random.nextInt(maze.getRowsSize() - 2) + 1, maze.getColumnsSize() - 1));
+                while (maze.getStartPosition().equals(maze.getGoalPosition()) || maze.positionOfWall(maze.getGoalPosition().getRowIndex(), maze.getGoalPosition().getColumnIndex() - 1));
+                break;
+            case 2:
+                do
+                    maze.setGoalPosition(new Position(maze.getRowsSize() - 1, random.nextInt(maze.getColumnsSize() - 2) + 1));
+                while (maze.getStartPosition().equals(maze.getGoalPosition()) || maze.positionOfWall(maze.getGoalPosition().getRowIndex() - 1, maze.getGoalPosition().getColumnIndex()));
+                break;
+            case 3:
+                do
+                    maze.setGoalPosition(new Position(random.nextInt(maze.getRowsSize() - 2) + 1, 0));
+                while (maze.getStartPosition().equals(maze.getGoalPosition()) || maze.positionOfWall(maze.getGoalPosition().getRowIndex(), maze.getGoalPosition().getColumnIndex() + 1));
+                break;
+        }
+    }
+
     /***
      * 1. Start with a grid full of walls.
      * 2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
@@ -61,7 +109,10 @@ public class MyMazeGenerator extends AMazeGenerator {
         maze.makeAllWalls(); //1
         ArrayList<Position> wallsList = new ArrayList<>();
 
-        Position currentPosition = maze.getStartPosition();
+        Position currentPosition = generateStartPosition(maze);
+        if (currentPosition == null)
+            throw new RuntimeException("Expected for startPosition but null was return");
+        maze.removeWall(maze.getStartPosition());
         maze.removeWall(currentPosition);
         wallsList.addAll(getNeighbourWalls(maze, currentPosition)); //2
         while (!wallsList.isEmpty()) { //3
@@ -75,7 +126,8 @@ public class MyMazeGenerator extends AMazeGenerator {
             }
         }
 
-
+        generateGoalPosition(maze);
+        maze.removeWall(maze.getGoalPosition());
         return maze;
     }
 }
