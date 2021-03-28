@@ -10,14 +10,19 @@ public class Maze {
         if (columns < 2 || rows < 2)
             throw new IllegalArgumentException("one or more of the arguments are < 2");
         this.grid = new int[rows][columns];
-        this.startPosition = new Position(0, 1);
+        this.startPosition = new Position(1, 1);
         this.goalPosition = new Position(rows - 1, columns - 2);
     }
 
     public void print() {
-        for (int[] arr : this.grid) {
-            for (int i : arr) {
-                System.out.print("" + (i == 1 ? "█" : " ") + " ");
+        for (int i = 0; i < this.getRowsSize(); i++) {
+            for (int j = 0; j < this.getColumnsSize(); j++) {
+                if (this.startPosition.equals(new Position(i, j)))
+                    System.out.println("S");
+                else if (this.goalPosition.equals(new Position(i, j)))
+                    System.out.println("E");
+                else
+                    System.out.print("" + (this.grid[i][j] == 1 ? "█" : " ") + " ");
             }
             System.out.println();
         }
