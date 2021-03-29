@@ -5,35 +5,6 @@ import java.util.Random;
 
 public class MyMazeGenerator extends AMazeGenerator {
 
-    static ArrayList<Position> getNeighbourWalls(Maze maze, Position currentPosition) {
-        ArrayList<Position> wallsList = new ArrayList<>();
-        if (maze.validMazePosition(currentPosition)) {
-            if (maze.validMazePosition(currentPosition.getUpPosition()) && maze.positionOfWall(currentPosition.getUpPosition()))
-                wallsList.add(currentPosition.getUpPosition());
-            if (maze.validMazePosition(currentPosition.getDownPosition()) && maze.positionOfWall(currentPosition.getDownPosition()))
-                wallsList.add(currentPosition.getDownPosition());
-            if (maze.validMazePosition(currentPosition.getLeftPosition()) && maze.positionOfWall(currentPosition.getLeftPosition()))
-                wallsList.add(currentPosition.getLeftPosition());
-            if (maze.validMazePosition(currentPosition.getRightPosition()) && maze.positionOfWall(currentPosition.getRightPosition()))
-                wallsList.add(currentPosition.getRightPosition());
-        }
-        return wallsList;
-    }
-
-    private static ArrayList<Position> getNeighbourTiles(Maze maze, Position currentPosition) {
-        ArrayList<Position> tilesList = new ArrayList<>();
-        int columnIndex = currentPosition.getColumnIndex(), rowIndex = currentPosition.getRowIndex();
-        if (rowIndex + 1 < maze.getRowsSize() && maze.positionOfTile(rowIndex + 1, columnIndex))
-            tilesList.add(new Position(rowIndex + 1, columnIndex));
-        if (columnIndex + 1 < maze.getColumnsSize() && maze.positionOfTile(rowIndex, columnIndex + 1))
-            tilesList.add(new Position(rowIndex, columnIndex + 1));
-        if (rowIndex - 1 >= 0 && maze.positionOfTile(rowIndex - 1, columnIndex))
-            tilesList.add(new Position(rowIndex - 1, columnIndex));
-        if (columnIndex - 1 >= 0 && maze.positionOfTile(rowIndex, columnIndex - 1))
-            tilesList.add(new Position(rowIndex, columnIndex - 1));
-        return tilesList;
-    }
-
     private static void connectNeighbours(Maze maze, Position currentPosition, Position neighbour) {
         if (currentPosition.getColumnIndex() == neighbour.getColumnIndex()) {
             maze.removeWall(new Position(Math.min(neighbour.getRowIndex(), currentPosition.getRowIndex()) + 1, currentPosition.getColumnIndex()));
@@ -65,15 +36,15 @@ public class MyMazeGenerator extends AMazeGenerator {
         Position currentPosition = maze.getStartPosition();
         maze.removeWall(maze.getStartPosition());
         maze.removeWall(currentPosition);
-        wallsList.addAll(getNeighbourWalls(maze, currentPosition)); //2
+        wallsList.addAll(maze.getNeighbourWalls(currentPosition)); //2
         while (!wallsList.isEmpty()) { //3
             currentPosition = wallsList.remove(random.nextInt(wallsList.size()));
-            ArrayList<Position> neighbourTiles = getNeighbourTiles(maze, currentPosition);
+            ArrayList<Position> neighbourTiles = maze.getNeighbourTiles(currentPosition);
             if (neighbourTiles.size() == 1) { //3.1
                 Position neighbour = neighbourTiles.get(random.nextInt(neighbourTiles.size()));
                 maze.removeWall(currentPosition);
                 connectNeighbours(maze, currentPosition, neighbour);
-                wallsList.addAll(getNeighbourWalls(maze, currentPosition));
+                wallsList.addAll(maze.getNeighbourWalls(currentPosition));
             }
         }
 
