@@ -8,10 +8,11 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
     private Queue<AState> queue = new LinkedList<>();
 
     public BreadthFirstSearch() {
-        super("Breadth  First Search");
+        super("Breadth First Search");
     }
-    protected BreadthFirstSearch(Queue<AState> queue) {
-        super("Breadth  First Search");
+
+    protected BreadthFirstSearch(String name, Queue<AState> queue) {
+        super(name);
         this.queue = queue;
     }
 
@@ -33,9 +34,27 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
      */
     @Override
     public Solution solve(ISearchable domain) {
-        this.queue.clear();
         HashSet<String> visited = new HashSet<>();
+        AState currentState;
+        this.queue.clear();
+
         visited.add(domain.getStartState().toString());
-        return null;
+        queue.add(domain.getStartState());
+
+        while (!queue.isEmpty()) {
+            currentState = queue.remove();
+            if (currentState.equals(domain.getGoalState())) {
+                this.NumberOfNodesEvaluated = visited.size();
+                return new Solution(currentState);
+            }
+            for (AState a : domain.getAllPossibleStates(currentState)) {
+                if (!visited.contains(a.toString())) {
+                    visited.add(a.toString());
+                    queue.add(a);
+                }
+            }
+        }
+        this.NumberOfNodesEvaluated = visited.size();
+        return new Solution();
     }
 }
