@@ -8,22 +8,22 @@ import java.util.ArrayList;
 public class RunSearchOnMaze3D {
     public static void main(String[] args) {
     IMazeGenerator3D mg = new MyMaze3DGenerator();
-//    Maze3D maze = mg.generate(3,3, 5);
-        int[][][] map = {
-                {
-                        {0, 0, 1, 0, 1},
-                        {0, 1, 1, 1, 0},
-                        {0, 1, 1, 0, 0}},
-                {
-                        {1, 1, 1, 0, 1},
-                        {1, 0, 0, 1, 0},
-                        {0, 0, 1, 0, 1}},
-                {
-                        {1, 1, 1, 0, 1},
-                        {1, 1, 0, 0, 0},
-                        {1, 1, 1, 0, 1}}
-        };
-        Maze3D maze = new Maze3D(map, new Position3D(0,0,0), new Position3D(0,2,4));
+    Maze3D maze = mg.generate(3,3, 5);
+//        int[][][] map = {
+//                {
+//                        {0, 0, 1, 0, 1},
+//                        {0, 1, 1, 1, 0},
+//                        {0, 1, 1, 0, 0}},
+//                {
+//                        {1, 1, 1, 0, 1},
+//                        {1, 0, 0, 1, 0},
+//                        {0, 0, 1, 0, 1}},
+//                {
+//                        {1, 1, 1, 0, 1},
+//                        {1, 1, 0, 0, 0},
+//                        {1, 1, 1, 0, 1}}
+//        };
+//        Maze3D maze = new Maze3D(map, new Position3D(0,0,0), new Position3D(0,2,4));
 
         SearchableMaze3D searchableMaze = new SearchableMaze3D(maze);
     maze.print();
