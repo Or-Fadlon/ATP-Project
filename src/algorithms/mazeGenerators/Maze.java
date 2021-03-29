@@ -5,8 +5,8 @@ import java.util.Random;
 
 public class Maze {
     private static final int WALL = 1, TILE = 0;
-    private Position startPosition, goalPosition;
     private int[][] grid;
+    private Position startPosition, goalPosition;
 
 
     public Maze(int rows, int columns) {
@@ -15,6 +15,12 @@ public class Maze {
         this.grid = new int[rows][columns];
         this.startPosition = new Position(0, 0);
         this.goalPosition = new Position(rows - 1, columns - 1);
+    }
+
+    public Maze(int[][] grid, Position startPosition, Position goalPosition) {
+        this.grid = grid;
+        this.startPosition = startPosition;
+        this.goalPosition = goalPosition;
     }
 
     //TODO: remove colors!!
@@ -45,19 +51,11 @@ public class Maze {
         return new Position(this.startPosition);
     }
 
-    public void setStartPosition(Position position) {
-        this.startPosition = new Position(position);
-    }
-
     /**
      * @return the goal Position of the maze
      */
     public Position getGoalPosition() {
         return new Position(this.goalPosition);
-    }
-
-    public void setGoalPosition(Position position) {
-        this.goalPosition = new Position(position);
     }
 
     public boolean positionOfWall(Position position) {
@@ -81,11 +79,11 @@ public class Maze {
     }
 
     public void addWall(Position position) {
-            this.grid[position.getRowIndex()][position.getColumnIndex()] = WALL;
+        this.grid[position.getRowIndex()][position.getColumnIndex()] = WALL;
     }
 
     public void removeWall(Position position) {
-            this.grid[position.getRowIndex()][position.getColumnIndex()] = TILE;
+        this.grid[position.getRowIndex()][position.getColumnIndex()] = TILE;
     }
 
     public int getRowsSize() {
@@ -131,15 +129,24 @@ public class Maze {
         return tilesList;
     }
 
+
+    public void connectNeighbours(Position currentPosition, Position neighbour) {
+        if (currentPosition.getColumnIndex() == neighbour.getColumnIndex()) {
+            this.removeWall(new Position(Math.min(neighbour.getRowIndex(), currentPosition.getRowIndex()) + 1, currentPosition.getColumnIndex()));
+        } else if (currentPosition.getRowIndex() == neighbour.getRowIndex()) {
+            this.removeWall(new Position(currentPosition.getRowIndex(), Math.min(neighbour.getColumnIndex(), currentPosition.getColumnIndex()) + 1));
+        }
+    }
+
     public void generateStartPosition() {
         Random random = new Random();
         int side = random.nextInt(4);
         switch (side) {
-            case 0 -> this.setStartPosition(new Position(0, random.nextInt(this.getColumnsSize())));
-            case 1 -> this.setStartPosition(new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1));
-            case 2 -> this.setStartPosition(new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())));
-            case 3 -> this.setStartPosition(new Position(random.nextInt(this.getRowsSize()), 0));
-            default -> this.setStartPosition(new Position(0, 0));
+            case 0 -> this.startPosition = new Position(0, random.nextInt(this.getColumnsSize())); //UP
+            case 1 -> this.startPosition = new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1); //RIGHT
+            case 2 -> this.startPosition = new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())); //DOWN
+            case 3 -> this.startPosition = new Position(random.nextInt(this.getRowsSize()), 0); //LEFT
+            default -> this.startPosition = new Position(0, 0);
         }
     }
 
@@ -148,10 +155,10 @@ public class Maze {
         int side = random.nextInt(4);
         do {
             switch (side) {
-                case 0 -> this.setGoalPosition(new Position(0, random.nextInt(this.getColumnsSize())));
-                case 1 -> this.setGoalPosition(new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1));
-                case 2 -> this.setGoalPosition(new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())));
-                case 3 -> this.setGoalPosition(new Position(random.nextInt(this.getRowsSize()), 0));
+                case 0 -> this.goalPosition = new Position(0, random.nextInt(this.getColumnsSize())); //UP
+                case 1 -> this.goalPosition = new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1); //RIGHT
+                case 2 -> this.goalPosition = new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())); //DOWN
+                case 3 -> this.goalPosition = new Position(random.nextInt(this.getRowsSize()), 0); //LEFT
             }
         }
         while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition()));

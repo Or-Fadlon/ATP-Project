@@ -6,7 +6,7 @@ import algorithms.mazeGenerators.Position;
 import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable {
-    public Maze maze;
+    private Maze maze;
     private MazeState startState, goalState;
 
     public SearchableMaze(Maze maze) {

@@ -4,15 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MyMazeGenerator extends AMazeGenerator {
-
-    private static void connectNeighbours(Maze maze, Position currentPosition, Position neighbour) {
-        if (currentPosition.getColumnIndex() == neighbour.getColumnIndex()) {
-            maze.removeWall(new Position(Math.min(neighbour.getRowIndex(), currentPosition.getRowIndex()) + 1, currentPosition.getColumnIndex()));
-        } else if (currentPosition.getRowIndex() == neighbour.getRowIndex()) {
-            maze.removeWall(new Position(currentPosition.getRowIndex(), Math.min(neighbour.getColumnIndex(), currentPosition.getColumnIndex()) + 1));
-        }
-    }
-
     /***
      * 1. Start with a grid full of walls.
      * 2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
@@ -43,13 +34,12 @@ public class MyMazeGenerator extends AMazeGenerator {
             if (neighbourTiles.size() == 1) { //3.1
                 Position neighbour = neighbourTiles.get(random.nextInt(neighbourTiles.size()));
                 maze.removeWall(currentPosition);
-                connectNeighbours(maze, currentPosition, neighbour);
+                maze.connectNeighbours(currentPosition, neighbour);
                 wallsList.addAll(maze.getNeighbourWalls(currentPosition));
             }
         }
 
         maze.generateGoalPosition();
-        maze.removeWall(maze.getGoalPosition());
         return maze;
     }
 }

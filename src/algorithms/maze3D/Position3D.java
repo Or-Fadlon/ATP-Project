@@ -1,5 +1,7 @@
 package algorithms.maze3D;
 
+import algorithms.mazeGenerators.Position;
+
 /**
  * this class represents a position in 3D area.
  * we think about our area as a 3D table with x as column number, y as row and z as depth.
@@ -16,6 +18,7 @@ public class Position3D {
      * @param row    row.
      */
     public Position3D(int depth, int row, int column) {
+        this.depth = depth;
         this.column = column;
         this.row = row;
     }
@@ -55,4 +58,44 @@ public class Position3D {
         return this.column;
     }
 
+    public Position3D getUpPosition() {
+        return new Position3D(this.depth, this.row - 1, this.column);
+    }
+
+    public Position3D getRightPosition() {
+        return new Position3D(this.depth, this.row, this.column + 1);
+    }
+
+    public Position3D getDownPosition() {
+        return new Position3D(this.depth, this.row + 1, this.column);
+    }
+
+    public Position3D getLeftPosition() {
+        return new Position3D(this.depth, this.row, this.column - 1);
+    }
+
+    public Position3D getHigherPosition() {
+        return new Position3D(this.depth - 1, this.row, this.column);
+    }
+
+    public Position3D getLowerPosition() {
+        return new Position3D(this.depth + 1, this.row, this.column);
+    }
+
+    @Override
+    public String toString() {
+        return "{" + depth + "," + row + "," + column + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Position3D that = (Position3D) o;
+
+        if (depth != that.depth) return false;
+        if (row != that.row) return false;
+        return column == that.column;
+    }
 }

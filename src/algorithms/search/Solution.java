@@ -7,7 +7,7 @@ import java.util.Collections;
 public class Solution {
 
     public int cost;
-    private ArrayList<AState> path;
+    private ArrayList<AState> path = new ArrayList<>();
 
     public Solution(AState goal) {
         AState temp = goal;
