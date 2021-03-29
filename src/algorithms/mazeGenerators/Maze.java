@@ -1,5 +1,6 @@
 package algorithms.mazeGenerators;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Maze {
@@ -63,8 +64,8 @@ public class Maze {
         return this.grid[position.getRowIndex()][position.getColumnIndex()] == WALL;
     }
 
-    public boolean positionOfTile(int row, int column) {
-        return this.grid[row][column] == TILE;
+    public boolean positionOfTile(Position position) {
+        return this.grid[position.getRowIndex()][position.getColumnIndex()] == TILE;
     }
 
     public void cleanAllWalls() {
@@ -98,6 +99,36 @@ public class Maze {
     public boolean validMazePosition(Position position) {
         return (0 <= position.getRowIndex() && position.getRowIndex() < this.getRowsSize() &&
                 0 <= position.getColumnIndex() && position.getColumnIndex() < this.getColumnsSize());
+    }
+
+    public ArrayList<Position> getNeighbourWalls(Position currentPosition) {
+        ArrayList<Position> wallsList = new ArrayList<>();
+        if (this.validMazePosition(currentPosition)) {
+            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfWall(currentPosition.getUpPosition()))
+                wallsList.add(currentPosition.getUpPosition());
+            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfWall(currentPosition.getDownPosition()))
+                wallsList.add(currentPosition.getDownPosition());
+            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfWall(currentPosition.getLeftPosition()))
+                wallsList.add(currentPosition.getLeftPosition());
+            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfWall(currentPosition.getRightPosition()))
+                wallsList.add(currentPosition.getRightPosition());
+        }
+        return wallsList;
+    }
+
+    public ArrayList<Position> getNeighbourTiles(Position currentPosition) {
+        ArrayList<Position> tilesList = new ArrayList<>();
+        if (this.validMazePosition(currentPosition)) {
+            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfTile(currentPosition.getUpPosition()))
+                tilesList.add(currentPosition.getUpPosition());
+            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfTile(currentPosition.getDownPosition()))
+                tilesList.add(currentPosition.getDownPosition());
+            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfTile(currentPosition.getLeftPosition()))
+                tilesList.add(currentPosition.getLeftPosition());
+            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfTile(currentPosition.getRightPosition()))
+                tilesList.add(currentPosition.getRightPosition());
+        }
+        return tilesList;
     }
 
     public void generateStartPosition() {
