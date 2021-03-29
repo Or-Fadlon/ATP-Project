@@ -3,7 +3,7 @@ package algorithms.mazeGenerators;
 /**
  * this class represents a position in 2D area.
  * we think about our area as a table with x as column number and y as a row.
- * the values of the row and column are Natural number.
+ * the values of the row and column are Integer number.
  */
 public class Position {
     private int column, row;
@@ -11,8 +11,8 @@ public class Position {
     /**
      * constructor
      *
-     * @param column column - Natural number.
-     * @param row    row - Natural number.
+     * @param column column.
+     * @param row    row.
      */
     public Position(int row, int column) {
 //        if (column < 0 || row < 0)
