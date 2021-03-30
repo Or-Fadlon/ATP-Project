@@ -10,7 +10,7 @@ public class RunMaze3DGenerator {
     private static void testMazeGenerator(IMazeGenerator3D mazeGenerator) {
         final int depth = 3, rows = 3, columns = 5;
         // prints the time it takes the algorithm to run
-        System.out.println(String.format("Maze generationtime(ms): %s ", mazeGenerator.measureAlgorithmTimeMillis(depth, rows, columns)));
+        System.out.printf("Maze generation time(ms): %s %n", mazeGenerator.measureAlgorithmTimeMillis(depth, rows, columns));
         // generate another maze
 //        Maze3D maze = mazeGenerator.generate(depth, rows, columns);
         int[][][] map = {
@@ -33,8 +33,8 @@ public class RunMaze3DGenerator {
         // get the maze entrance
         Position3D startPosition = maze.getStartPosition();
         // print the start position
-        System.out.println(String.format("Start Position: %s", startPosition)); // format "{row,column}"
+        System.out.printf("Start Position: %s%n", startPosition); // format "{row,column}"
         // prints the maze exit position
-        System.out.println(String.format("Goal Position: %s", maze.getGoalPosition()));
+        System.out.printf("Goal Position: %s%n", maze.getGoalPosition());
     }
 }

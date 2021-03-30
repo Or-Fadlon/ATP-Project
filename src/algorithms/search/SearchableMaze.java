@@ -6,7 +6,7 @@ import algorithms.mazeGenerators.Position;
 import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable {
-    private final Maze maze;
+    public final Maze maze; //TODO: private
     private final MazeState startState, goalState;
 
     /**
@@ -40,29 +40,30 @@ public class SearchableMaze implements ISearchable {
      * @return all the possible next states of the given state
      */
     @Override
-    public ArrayList<AState> getAllPossibleStates(AState state) { //TODO: is it ok to move in slant when there is no ר??
+    public ArrayList<AState> getAllPossibleStates(AState state) {
         Position currentPosition = (Position) state.getCurrentState();
         ArrayList<AState> possibleStates = new ArrayList<>();
         boolean upWall = maze.positionOfWall(currentPosition.getUpPosition()),
                 downWall = maze.positionOfWall(currentPosition.getDownPosition()),
                 rightWall = maze.positionOfWall(currentPosition.getRightPosition()),
                 leftWall = maze.positionOfWall(currentPosition.getLeftPosition());
-        if (maze.validMazePosition(currentPosition.getUpPosition()) && !upWall)
-            possibleStates.add(new MazeState(state, currentPosition.getUpPosition(), state.getCost() + 10));
-        if (maze.validMazePosition(currentPosition.getUpRightPosition()) && !maze.positionOfWall(currentPosition.getUpRightPosition()) && (!upWall || !rightWall))
+        if (maze.validMazePosition(currentPosition.getUpRightPosition()) && !maze.positionOfWall(currentPosition.getUpRightPosition()) && (!upWall || !rightWall)) //UP-RIGHT
             possibleStates.add(new MazeState(state, currentPosition.getUpRightPosition(), state.getCost() + 15));
-        if (maze.validMazePosition(currentPosition.getRightPosition()) && !rightWall)
-            possibleStates.add(new MazeState(state, currentPosition.getRightPosition(), state.getCost() + 10));
-        if (maze.validMazePosition(currentPosition.getDownRightPosition()) && !maze.positionOfWall(currentPosition.getDownRightPosition()) && (!downWall || !rightWall))
+        if (maze.validMazePosition(currentPosition.getDownRightPosition()) && !maze.positionOfWall(currentPosition.getDownRightPosition()) && (!downWall || !rightWall)) //DOWN-RIGHT
             possibleStates.add(new MazeState(state, currentPosition.getDownRightPosition(), state.getCost() + 15));
-        if (maze.validMazePosition(currentPosition.getDownPosition()) && !downWall)
-            possibleStates.add(new MazeState(state, currentPosition.getDownPosition(), state.getCost() + 10));
-        if (maze.validMazePosition(currentPosition.getDownLeftPosition()) && !maze.positionOfWall(currentPosition.getDownLeftPosition()) && (!downWall || !leftWall))
-            possibleStates.add(new MazeState(state, currentPosition.getDownLeftPosition(), state.getCost() + 15));
-        if (maze.validMazePosition(currentPosition.getLeftPosition()) && !leftWall)
-            possibleStates.add(new MazeState(state, currentPosition.getLeftPosition(), state.getCost() + 10));
-        if (maze.validMazePosition(currentPosition.getUpLeftPosition()) && !maze.positionOfWall(currentPosition.getUpLeftPosition()) && (!upWall || !leftWall))
+        if (maze.validMazePosition(currentPosition.getUpLeftPosition()) && !maze.positionOfWall(currentPosition.getUpLeftPosition()) && (!upWall || !leftWall)) //UP-LEFT
             possibleStates.add(new MazeState(state, currentPosition.getUpLeftPosition(), state.getCost() + 15));
+        if (maze.validMazePosition(currentPosition.getDownLeftPosition()) && !maze.positionOfWall(currentPosition.getDownLeftPosition()) && (!downWall || !leftWall)) //DOWN-LEFT
+            possibleStates.add(new MazeState(state, currentPosition.getDownLeftPosition(), state.getCost() + 15));
+        if (maze.validMazePosition(currentPosition.getUpPosition()) && !upWall) //UP
+            possibleStates.add(new MazeState(state, currentPosition.getUpPosition(), state.getCost() + 10));
+        if (maze.validMazePosition(currentPosition.getDownPosition()) && !downWall) //DOWN
+            possibleStates.add(new MazeState(state, currentPosition.getDownPosition(), state.getCost() + 10));
+        if (maze.validMazePosition(currentPosition.getRightPosition()) && !rightWall) //RIGHT
+            possibleStates.add(new MazeState(state, currentPosition.getRightPosition(), state.getCost() + 10));
+        if (maze.validMazePosition(currentPosition.getLeftPosition()) && !leftWall) //LEFT
+            possibleStates.add(new MazeState(state, currentPosition.getLeftPosition(), state.getCost() + 10));
+
         return possibleStates;
     }
 }

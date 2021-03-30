@@ -36,16 +36,16 @@ public class RunSearchOnMaze3D {
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {
         //Solve a searching problem with a searcher
         Solution solution = searcher.solve(domain);
-        System.out.println(String.format("'%s' algorithm - nodes evaluated:%s", searcher.getName(), searcher.getNumberOfNodesEvaluated()));
+        System.out.printf("'%s' algorithm - nodes evaluated:%s%n", searcher.getName(), searcher.getNumberOfNodesEvaluated());
         //Printing Solution Path
         System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
 //        for (int i = 0; i < solutionPath.size(); i++) {
 //            System.out.println(String.format("%s.%s", i, solutionPath.get(i)));
 //        }
-        System.out.println(String.format("%s = %s", searcher.getName(), solution.getCost()));
-        System.out.println(String.format("%s.%s", 0, solutionPath.get(0)));
-        System.out.println(String.format("%s.%s", solutionPath.size() - 1, solutionPath.get(solutionPath.size() - 1)));
+        System.out.printf("%s = %s%n", searcher.getName(), solution.getCost());
+        System.out.printf("%s.%s%n", 0, solutionPath.get(0));
+        System.out.printf("%s.%s%n", solutionPath.size() - 1, solutionPath.get(solutionPath.size() - 1));
 
     }
 }

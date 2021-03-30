@@ -1,6 +1,7 @@
 package algorithms.mazeGenerators;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -43,9 +44,11 @@ public class Maze {
      * print a colored console view of the maze
      */
     public void printColored() {
-        final String RED = "\033[0;31m"; //REMOVE
-        final String GREEN = "\033[0;32m"; //REMOVE
-        final String RESET = "\033[0m"; //REMOVE
+        final String RED = "\033[0;31m";
+        final String GREEN = "\033[0;32m";
+        final String BLACK_BACKGROUND = "\u001B[40m";
+        final String WHITE_BACKGROUND = "\u001B[47m";
+        final String RESET = "\033[0m";
         for (int i = 0; i < this.getRowsSize(); i++) {
             System.out.print("{");
             for (int j = 0; j < this.getColumnsSize(); j++) {
@@ -53,8 +56,10 @@ public class Maze {
                     System.out.print(GREEN + " S" + RESET);
                 else if (this.goalPosition.equals(new Position(i, j)))
                     System.out.print(RED + " E" + RESET);
+                else if (this.grid[i][j] == 1)
+                    System.out.print(BLACK_BACKGROUND + "  " + RESET);
                 else
-                    System.out.print(" " + (this.grid[i][j] == 1 ? "B" : " "));
+                    System.out.print("  ");
             }
             System.out.println(" }");
         }
@@ -76,6 +81,41 @@ public class Maze {
             }
             System.out.println(" }");
         }
+    }
+
+    /**
+     * print a colored console view of the maze
+     * include trace in the maze
+     */
+    public void printColoredTrace(HashSet<String> trace) {
+        final String RED = "\033[0;31m";
+        final String GREEN = "\033[0;32m";
+        final String RESET = "\033[0m";
+        final String YELLOW_BACKGROUND = "\u001B[43m";
+        final String WHITE_BACKGROUND = "\u001B[47m";
+        for (int i = 0; i < this.getRowsSize(); i++) {
+            System.out.print("{");
+            for (int j = 0; j < this.getColumnsSize(); j++) {
+                if (this.startPosition.equals(new Position(i, j)))
+                    System.out.print(GREEN + " S" + RESET);
+                else if (this.goalPosition.equals(new Position(i, j)))
+                    System.out.print(RED + " E" + RESET);
+                else if (trace.contains("{" + i + "," + j + "}"))
+                    System.out.print(YELLOW_BACKGROUND + "  " + RESET);
+                else if (this.grid[i][j] == 1)
+                    System.out.print(WHITE_BACKGROUND + "  " + RESET);
+                else
+                    System.out.print("  ");
+            }
+            System.out.println(" }");
+        }
+    }
+
+    /**
+     * @return copy of the maze grid
+     */
+    public int[][] getGrid() {
+        return grid.clone();
     }
 
     /**
