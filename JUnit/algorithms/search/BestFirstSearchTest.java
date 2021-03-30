@@ -1,12 +1,10 @@
 package algorithms.search;
 
-import algorithms.mazeGenerators.AMazeGenerator;
-import algorithms.mazeGenerators.IMazeGenerator;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MyMazeGenerator;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,4 +15,8 @@ class BestFirstSearchTest {
     BestFirstSearch searcher = new BestFirstSearch();
     Solution solution = searcher.solve(searchableMaze);
     ArrayList<AState> solutionPath = solution.getSolutionPath();
+
+    @Test
+    void name() {
+    }
 }
