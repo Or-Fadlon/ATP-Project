@@ -3,6 +3,7 @@ package test;
 import algorithms.mazeGenerators.IMazeGenerator;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MyMazeGenerator;
+import algorithms.mazeGenerators.Position;
 import algorithms.search.*;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.HashSet;
 public class PrintSearchOnMaze {
     public static void main(String[] args) {
         IMazeGenerator mg = new MyMazeGenerator();
-        Maze maze = mg.generate(30, 30);
+        Maze maze = mg.generate(5, 5);
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         maze.printColored();
         solveProblem(searchableMaze, new BreadthFirstSearch());
@@ -27,9 +28,9 @@ public class PrintSearchOnMaze {
         System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
 
-        HashSet<String> trace = new HashSet<>();
-        for (int i = 0; i < solutionPath.size(); i++)
-            trace.add(solutionPath.get(i).toString());
+        HashSet<Position> trace = new HashSet<>();
+        for (AState state : solutionPath)
+            trace.add((Position) state.getCurrentState());
         ((SearchableMaze) domain).maze.printColoredTrace(trace);
 
         for (int i = 0; i < solutionPath.size(); i++) {

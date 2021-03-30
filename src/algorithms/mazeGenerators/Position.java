@@ -146,7 +146,7 @@ public class Position {
 
     /**
      * two Points equals when its row and column index equals
-     * @param o
+     * @param o object to equal
      * @return true - row and column index equals. otherwise false
      */
     @Override
@@ -158,5 +158,12 @@ public class Position {
 
         if (column != position.column) return false;
         return row == position.row;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = column;
+        result = 31 * result + row;
+        return result;
     }
 }
