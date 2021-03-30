@@ -8,8 +8,8 @@ import java.util.Collections;
  */
 public class Solution {
 
-    public int cost;
-    private ArrayList<AState> path;
+    private final ArrayList<AState> path;
+    private int cost;
 
     /**
      * constructor
@@ -19,12 +19,11 @@ public class Solution {
     public Solution(AState goal) {
         AState temp = goal;
         this.path = new ArrayList<>();
-        this.cost = 0;
         while (temp != null) {
             this.path.add(temp);
-            cost += temp.cost;
             temp = temp.prevState;
         }
+        this.cost = path.get(0).cost;
         Collections.reverse(path);
     }
 
@@ -40,5 +39,9 @@ public class Solution {
      */
     public ArrayList<AState> getSolutionPath() {
         return path;
+    }
+
+    public int getCost() {
+        return cost;
     }
 }

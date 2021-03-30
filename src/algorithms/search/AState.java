@@ -5,12 +5,12 @@ package algorithms.search;
  */
 public abstract class AState implements Comparable<AState> {
 
-    protected String stateName;
+    protected String currentState; //TODO: change to ASTATE?? POSITION?? is it ok to assume that every node have unique
     protected AState prevState;
     protected int cost;
 
-    public AState(AState prevState, String stateName, int cost) {
-        this.stateName = stateName;
+    public AState(AState prevState, String currentState, int cost) {
+        this.currentState = currentState;
         this.prevState = prevState;
         this.cost = cost;
     }
@@ -30,11 +30,11 @@ public abstract class AState implements Comparable<AState> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AState aState = (AState) o;
-        return stateName != null ? stateName.equals(aState.stateName) : aState.stateName != null;
+        return currentState != null ? currentState.equals(aState.currentState) : aState.currentState != null;
     }
 
     @Override
     public String toString() {
-        return this.stateName;
+        return this.currentState;
     }
 }

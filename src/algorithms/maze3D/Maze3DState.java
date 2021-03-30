@@ -6,7 +6,7 @@ import algorithms.search.AState;
  * 2D Maze problem state
  */
 public class Maze3DState extends AState {
-    public Maze3DState(AState prevState, String stateName, int cost) {
-        super(prevState, stateName, cost);
+    public Maze3DState(AState prevState, String currentState, int cost) {
+        super(prevState, currentState, cost);
     }
 }

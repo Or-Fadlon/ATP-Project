@@ -1,5 +1,6 @@
 package algorithms.search;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /**
@@ -8,5 +9,13 @@ import java.util.PriorityQueue;
 public class BestFirstSearch extends BreadthFirstSearch {
     public BestFirstSearch() {
         super("Best First Search", new PriorityQueue<AState>());
+    }
+}
+
+class priceComparator implements Comparator<AState> {
+
+    @Override
+    public int compare(AState o1, AState o2) {
+        return Integer.compare(o1.cost, o2.cost);
     }
 }
