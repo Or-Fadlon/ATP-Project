@@ -85,22 +85,26 @@ public class Maze {
 
     /**
      * print a colored console view of the maze
-     * include trace in the maze
+     * highlight maze Positions
+     *
+     * @param trace Positions to highlight
      */
-    public void printColoredTrace(HashSet<String> trace) {
+    public void printColoredTrace(HashSet<Position> trace) {
         final String RED = "\033[0;31m";
         final String GREEN = "\033[0;32m";
         final String RESET = "\033[0m";
         final String YELLOW_BACKGROUND = "\u001B[43m";
         final String WHITE_BACKGROUND = "\u001B[47m";
+        Position position;
         for (int i = 0; i < this.getRowsSize(); i++) {
             System.out.print("{");
             for (int j = 0; j < this.getColumnsSize(); j++) {
-                if (this.startPosition.equals(new Position(i, j)))
+                position = new Position(i, j);
+                if (this.startPosition.equals(position))
                     System.out.print(GREEN + " S" + RESET);
-                else if (this.goalPosition.equals(new Position(i, j)))
+                else if (this.goalPosition.equals(position))
                     System.out.print(RED + " E" + RESET);
-                else if (trace.contains("{" + i + "," + j + "}"))
+                else if (trace.contains(position))
                     System.out.print(YELLOW_BACKGROUND + "  " + RESET);
                 else if (this.grid[i][j] == 1)
                     System.out.print(WHITE_BACKGROUND + "  " + RESET);
