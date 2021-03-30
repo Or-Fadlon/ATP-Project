@@ -1,5 +1,8 @@
 package test;
 
+/**
+ * general checking functions for the assignment
+ */
 public class GeneralCheckingFunctions {
     public static boolean check3DMaze() {
         // if you have chosen to not do the Maze3D assignment, please change this value to false.

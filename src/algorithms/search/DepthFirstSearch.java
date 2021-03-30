@@ -3,6 +3,9 @@ package algorithms.search;
 import java.util.HashSet;
 import java.util.Stack;
 
+/**
+ * Depth First Search algorithm
+ */
 public class DepthFirstSearch extends ASearchingAlgorithm {
     public DepthFirstSearch() {
         super("Depth First Search");
@@ -10,33 +13,33 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
 
     /***
      *procedure DFS_iterative(G, v) is
-     *     let S be a stack
-     *     S.push(v)
-     *     while S is not empty do
-     *         v = S.pop()
-     *         if v is not labeled as discovered then
-     *             label v as discovered
-     *             for all edges from v to w in G.adjacentEdges(v) do
-     *                 S.push(w)
-     * @param domain
-     * @return
+     * 1     let S be a stack
+     * 2     S.push(v)
+     * 3     while S is not empty do
+     * 3.1         v = S.pop()
+     * 3.2         if v is not labeled as discovered then
+     * 3.2.1          label v as discovered
+     * 3.2.2          for all edges from v to w in G.adjacentEdges(v) do
+     *                    S.push(w)
+     * @param domain Searchable problem
+     * @return solution to the given problem; empty Solution if solution not found
      */
     @Override
     public Solution solve(ISearchable domain) {
-        Stack<AState> stack = new Stack<>();
         HashSet<String> visited = new HashSet<>();
+        Stack<AState> stack = new Stack<>(); //1
         AState currentState;
-        stack.push(domain.getStartState());
+        stack.push(domain.getStartState()); //2
 
-        while (!stack.isEmpty()) {
-            currentState = stack.pop();
-            if (currentState.equals(domain.getGoalState())) {
+        while (!stack.isEmpty()) { //3
+            currentState = stack.pop(); //3.1
+            if (currentState.equals(domain.getGoalState())) { //goal state found -> return Solution
                 this.NumberOfNodesEvaluated = visited.size();
                 return new Solution(currentState);
             }
-            if (!visited.contains(currentState.toString())) {
-                visited.add(currentState.toString());
-                stack.addAll(domain.getAllPossibleStates(currentState));
+            if (!visited.contains(currentState.toString())) { //3.2
+                visited.add(currentState.toString()); //3.2.1
+                stack.addAll(domain.getAllPossibleStates(currentState)); //3.2.2
             }
         }
         this.NumberOfNodesEvaluated = visited.size();

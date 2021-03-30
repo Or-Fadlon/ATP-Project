@@ -2,12 +2,24 @@ package algorithms.mazeGenerators;
 
 import java.util.Random;
 
+/**
+ * Simple maze generator
+ */
 public class SimpleMazeGenerator extends AMazeGenerator {
 
+    /**
+     * generate start and goal position.
+     * make all the maze full of walls.
+     * creates one main way from start position to goal position.
+     * randomly remove walls to add more complexity to the maze.
+     * @param rows number of rows of the maze to generate
+     * @param columns number of columns of the maze to generate
+     * @return Simple 2D maze
+     */
     @Override
     public Maze generate(int rows, int columns) {
-        Maze maze = new Maze(rows, columns);
         Random random = new Random();
+        Maze maze = new Maze(rows, columns);
         Position currentPosition;
         maze.generateStartPosition();
         maze.generateGoalPosition();
@@ -21,14 +33,13 @@ public class SimpleMazeGenerator extends AMazeGenerator {
                     currentPosition = currentPosition.getUpPosition();
                 if (currentPosition.getRowIndex() < maze.getGoalPosition().getRowIndex())
                     currentPosition = currentPosition.getDownPosition();
-                maze.removeWall(currentPosition);
             } else {
                 if (currentPosition.getColumnIndex() > maze.getGoalPosition().getColumnIndex())
                     currentPosition = currentPosition.getLeftPosition();
                 if (currentPosition.getColumnIndex() < maze.getGoalPosition().getColumnIndex())
                     currentPosition = currentPosition.getRightPosition();
-                maze.removeWall(currentPosition);
             }
+            maze.removeWall(currentPosition);
         }
         for (int i = 0; i < maze.getRowsSize(); i++) {
             for (int j = 0; j < maze.getColumnsSize(); j++) {

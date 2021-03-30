@@ -6,10 +6,18 @@ import algorithms.mazeGenerators.Position;
 import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable {
-    private Maze maze;
-    private MazeState startState, goalState;
+    private final Maze maze;
+    private final MazeState startState, goalState;
 
+    /**
+     * constructor
+     *
+     * @param maze 3D maze to solve
+     * @throws IllegalArgumentException -> maze == null
+     */
     public SearchableMaze(Maze maze) {
+        if (maze == null)
+            throw new IllegalArgumentException("cant handle null maze");
         this.maze = maze;
         this.startState = new MazeState(null, maze.getStartPosition().toString(), 0);
         this.goalState = new MazeState(null, maze.getGoalPosition().toString(), 0);
@@ -25,8 +33,14 @@ public class SearchableMaze implements ISearchable {
         return this.goalState;
     }
 
+    /**
+     * all optional 1 block moves in the maze from the given state
+     *
+     * @param state a valid state in the problem
+     * @return all the possible next states of the given state
+     */
     @Override
-    public ArrayList<AState> getAllPossibleStates(AState state) {
+    public ArrayList<AState> getAllPossibleStates(AState state) { //TODO: is it ok to move in slant when there is no ר??
         Position currentPosition = new Position(state.stateName);
         ArrayList<AState> possibleStates = new ArrayList<>();
         if (maze.validMazePosition(currentPosition.getUpPosition()) && !maze.positionOfWall(currentPosition.getUpPosition()))

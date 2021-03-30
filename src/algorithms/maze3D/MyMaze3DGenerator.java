@@ -5,7 +5,9 @@ import java.util.Random;
 
 public class MyMaze3DGenerator extends AMaze3DGenerator{
 
-    /***
+    /**
+     * maze generator using Prims algorithm:
+     *
      * 1. Start with a grid full of walls.
      * 2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
      * 3. While there are walls in the list:
@@ -22,17 +24,17 @@ public class MyMaze3DGenerator extends AMaze3DGenerator{
     public Maze3D generate(int depth, int rows, int columns) {
         Random random = new Random();
         Maze3D maze = new Maze3D(depth, rows, columns);
-        maze.makeAllWalls(); //1
         ArrayList<Position3D> wallsList = new ArrayList<>();
+        maze.makeAllWalls();
         maze.generateStartPosition();
         Position3D currentPosition = maze.getStartPosition();
         maze.removeWall(maze.getStartPosition());
         maze.removeWall(currentPosition);
-        wallsList.addAll(maze.getNeighbourWalls(currentPosition)); //2
-        while (!wallsList.isEmpty()) { //3
+        wallsList.addAll(maze.getNeighbourWalls(currentPosition));
+        while (!wallsList.isEmpty()) {
             currentPosition = wallsList.remove(random.nextInt(wallsList.size()));
             ArrayList<Position3D> neighbourTiles = maze.getNeighbourTiles(currentPosition);
-            if (neighbourTiles.size() == 1) { //3.1
+            if (neighbourTiles.size() == 1) {
                 Position3D neighbour = neighbourTiles.get(random.nextInt(neighbourTiles.size()));
                 maze.removeWall(currentPosition);
                 maze.connectNeighbours(currentPosition, neighbour);

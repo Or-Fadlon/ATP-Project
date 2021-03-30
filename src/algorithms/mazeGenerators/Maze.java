@@ -3,12 +3,21 @@ package algorithms.mazeGenerators;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Represent a 2D maze
+ */
 public class Maze {
     private static final int WALL = 1, TILE = 0;
     private int[][] grid;
     private Position startPosition, goalPosition;
 
-
+    /**
+     * constructor
+     *
+     * @param rows    number of rows
+     * @param columns number of columns
+     * @throws IllegalArgumentException if one one or more of the arguments are < 2
+     */
     public Maze(int rows, int columns) {
         if (columns < 2 || rows < 2)
             throw new IllegalArgumentException("one or more of the arguments are < 2");
@@ -17,14 +26,23 @@ public class Maze {
         this.goalPosition = new Position(rows - 1, columns - 1);
     }
 
+    /**
+     * constructor
+     *
+     * @param grid          a grid full of WALLs and TILEs
+     * @param startPosition maze start position
+     * @param goalPosition  maze goal position
+     */
     public Maze(int[][] grid, Position startPosition, Position goalPosition) {
         this.grid = grid;
         this.startPosition = startPosition;
         this.goalPosition = goalPosition;
     }
 
-    //TODO: remove colors!!
-    public void print() {
+    /**
+     * print a colored console view of the maze
+     */
+    public void printColored() {
         final String RED = "\033[0;31m"; //REMOVE
         final String GREEN = "\033[0;32m"; //REMOVE
         final String RESET = "\033[0m"; //REMOVE
@@ -40,8 +58,24 @@ public class Maze {
             }
             System.out.println(" }");
         }
-        if (this.positionOfWall(this.startPosition) || this.positionOfWall(this.goalPosition)) //REMOVE
-            System.out.println("*****HOOOOO NOOOO******"); //REMOVE
+    }
+
+    /**
+     * print a console view of the maze
+     */
+    public void print() {
+        for (int i = 0; i < this.getRowsSize(); i++) {
+            System.out.print("{");
+            for (int j = 0; j < this.getColumnsSize(); j++) {
+                if (this.startPosition.equals(new Position(i, j)))
+                    System.out.print(" S");
+                else if (this.goalPosition.equals(new Position(i, j)))
+                    System.out.print(" E");
+                else
+                    System.out.print(" " + this.grid[i][j]);
+            }
+            System.out.println(" }");
+        }
     }
 
     /**
@@ -58,79 +92,143 @@ public class Maze {
         return new Position(this.goalPosition);
     }
 
+    /**
+     * @param position a valid position in the maze
+     * @return true if it contains WALL otherwise false. invalid position will return false too.
+     */
     public boolean positionOfWall(Position position) {
-        return this.grid[position.getRowIndex()][position.getColumnIndex()] == WALL;
+        return this.validMazePosition(position) &&
+                this.grid[position.getRowIndex()][position.getColumnIndex()] == WALL;
     }
 
+    /**
+     * @param position a valid position in the maze
+     * @return true if it contains TILE otherwise false. invalid position will return false too.
+     */
     public boolean positionOfTile(Position position) {
-        return this.grid[position.getRowIndex()][position.getColumnIndex()] == TILE;
+        return this.validMazePosition(position) &&
+                this.grid[position.getRowIndex()][position.getColumnIndex()] == TILE;
     }
 
+    /**
+     * remove all walls from the maze
+     */
     public void cleanAllWalls() {
         for (int i = 0; i < grid.length; i++)
             for (int j = 0; j < grid[0].length; j++)
                 this.grid[i][j] = TILE;
     }
 
+    /**
+     * add a wall in every tile of the maze
+     */
     public void makeAllWalls() {
         for (int i = 0; i < grid.length; i++)
             for (int j = 0; j < grid[0].length; j++)
                 this.grid[i][j] = WALL;
     }
 
+    /**
+     * add a wall to the given position in the maze.
+     * do nothing if the position isn't a valid position in the maze
+     *
+     * @param position a valid position in the maze
+     */
     public void addWall(Position position) {
-        this.grid[position.getRowIndex()][position.getColumnIndex()] = WALL;
+        if (this.validMazePosition(position))
+            this.grid[position.getRowIndex()][position.getColumnIndex()] = WALL;
     }
 
+    /**
+     * remove a wall from the given position in the maze.
+     * do nothing if the position isn't a valid position in the maze
+     *
+     * @param position a valid position in the maze
+     */
     public void removeWall(Position position) {
-        this.grid[position.getRowIndex()][position.getColumnIndex()] = TILE;
+        if (this.validMazePosition(position))
+            this.grid[position.getRowIndex()][position.getColumnIndex()] = TILE;
     }
 
+    /**
+     * @return number of rows in the maze
+     */
     public int getRowsSize() {
         return grid.length;
     }
 
+    /**
+     * @return number of columns in the maze
+     */
     public int getColumnsSize() {
         return grid[0].length;
     }
 
+    /**
+     * @param position position in the maze we wish to check
+     * @return true for valid position in the maze, otherwise false
+     */
     public boolean validMazePosition(Position position) {
-        return (0 <= position.getRowIndex() && position.getRowIndex() < this.getRowsSize() &&
+        return (position != null &&
+                0 <= position.getRowIndex() && position.getRowIndex() < this.getRowsSize() &&
                 0 <= position.getColumnIndex() && position.getColumnIndex() < this.getColumnsSize());
     }
 
+    /**
+     * get all the neighbour WALLs position around given position
+     *
+     * @param currentPosition position to get the surrounding positions
+     * @return all the surrounding WALLs positions of the given position
+     * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
+     */
     public ArrayList<Position> getNeighbourWalls(Position currentPosition) {
         ArrayList<Position> wallsList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
-            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfWall(currentPosition.getUpPosition()))
+            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfWall(currentPosition.getUpPosition())) //UP
                 wallsList.add(currentPosition.getUpPosition());
-            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfWall(currentPosition.getDownPosition()))
+            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfWall(currentPosition.getDownPosition())) //DOWN
                 wallsList.add(currentPosition.getDownPosition());
-            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfWall(currentPosition.getLeftPosition()))
+            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfWall(currentPosition.getLeftPosition())) //LEFT
                 wallsList.add(currentPosition.getLeftPosition());
-            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfWall(currentPosition.getRightPosition()))
+            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfWall(currentPosition.getRightPosition())) //RIGHT
                 wallsList.add(currentPosition.getRightPosition());
         }
         return wallsList;
     }
 
+    /**
+     * get all the neighbour TILEs position around given position
+     *
+     * @param currentPosition position to get the surrounding positions
+     * @return all the surrounding TILEs positions of the given position
+     * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
+     */
     public ArrayList<Position> getNeighbourTiles(Position currentPosition) {
         ArrayList<Position> tilesList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
-            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfTile(currentPosition.getUpPosition()))
+            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfTile(currentPosition.getUpPosition())) //UP
                 tilesList.add(currentPosition.getUpPosition());
-            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfTile(currentPosition.getDownPosition()))
+            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfTile(currentPosition.getDownPosition())) //DOWN
                 tilesList.add(currentPosition.getDownPosition());
-            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfTile(currentPosition.getLeftPosition()))
+            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfTile(currentPosition.getLeftPosition())) //LEFT
                 tilesList.add(currentPosition.getLeftPosition());
-            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfTile(currentPosition.getRightPosition()))
+            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfTile(currentPosition.getRightPosition())) //RIGHT
                 tilesList.add(currentPosition.getRightPosition());
         }
         return tilesList;
     }
 
-
+    /**
+     * connect between two positions that have one block separate in the middle between them.
+     * X?Y - ? for wall to remove
+     *
+     * @param currentPosition position of one - X
+     * @param neighbour       position of one block away neighbour - Y
+     */
     public void connectNeighbours(Position currentPosition, Position neighbour) {
+        if (!this.validMazePosition(currentPosition)) {
+            throw new IllegalArgumentException("one of the given positions is not a valid position in the maze");
+        }
         if (currentPosition.getColumnIndex() == neighbour.getColumnIndex()) {
             this.removeWall(new Position(Math.min(neighbour.getRowIndex(), currentPosition.getRowIndex()) + 1, currentPosition.getColumnIndex()));
         } else if (currentPosition.getRowIndex() == neighbour.getRowIndex()) {
@@ -138,6 +236,10 @@ public class Maze {
         }
     }
 
+    /**
+     * randomly select a new starting position for the maze
+     * can be a TILE or a WALL
+     */
     public void generateStartPosition() {
         Random random = new Random();
         int side = random.nextInt(4);
@@ -150,6 +252,13 @@ public class Maze {
         }
     }
 
+    /**
+     * randomly select a new goal position for the maze.
+     * this position will be different from the starting point.
+     * must be a TILE
+     *
+     * @throws ExceptionInInitializerError if all the boarders of the maze contains walls. //TODO: handle this issue
+     */
     public void generateGoalPosition() {
         Random random = new Random();
         int side = random.nextInt(4);

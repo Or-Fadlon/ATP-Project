@@ -1,5 +1,8 @@
 package algorithms.mazeGenerators;
 
+/**
+ * Empty maze generator
+ */
 public class EmptyMazeGenerator extends AMazeGenerator {
 
     @Override

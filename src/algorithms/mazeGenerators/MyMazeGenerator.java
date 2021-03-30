@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MyMazeGenerator extends AMazeGenerator {
-    /***
+    /**
+     * maze generator using Prims algorithm:
+     *
      * 1. Start with a grid full of walls.
      * 2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
      * 3. While there are walls in the list:
-     *      3.1. Pick a random wall from the list.
-     *      If only one of the two cells that the wall divides is visited, then:
-     *          3.1.1. Make the wall a passage and mark the unvisited cell as part of the maze.
-     *          3.1.2. Add the neighboring walls of the cell to the wall list.
-     *      3.2. Remove the wall from the list.
-     * @param rows number of rows of the maze to generate
+     * 3.1. Pick a random wall from the list.
+     * If only one of the two cells that the wall divides is visited, then:
+     * 3.1.1. Make the wall a passage and mark the unvisited cell as part of the maze.
+     * 3.1.2. Add the neighboring walls of the cell to the wall list.
+     * 3.2. Remove the wall from the list.
+     *
+     * @param rows    number of rows of the maze to generate
      * @param columns number of columns of the maze to generate
      * @return generated maze
      */
