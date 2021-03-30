@@ -19,8 +19,8 @@ public class SearchableMaze implements ISearchable {
         if (maze == null)
             throw new IllegalArgumentException("cant handle null maze");
         this.maze = maze;
-        this.startState = new MazeState(null, maze.getStartPosition().toString(), 0);
-        this.goalState = new MazeState(null, maze.getGoalPosition().toString(), 0);
+        this.startState = new MazeState(null, maze.getStartPosition(), 0);
+        this.goalState = new MazeState(null, maze.getGoalPosition(), 0);
     }
 
     @Override
@@ -41,28 +41,28 @@ public class SearchableMaze implements ISearchable {
      */
     @Override
     public ArrayList<AState> getAllPossibleStates(AState state) { //TODO: is it ok to move in slant when there is no ר??
-        Position currentPosition = new Position(state.currentState);
+        Position currentPosition = (Position) state.getCurrentState();
         ArrayList<AState> possibleStates = new ArrayList<>();
         boolean upWall = maze.positionOfWall(currentPosition.getUpPosition()),
                 downWall = maze.positionOfWall(currentPosition.getDownPosition()),
                 rightWall = maze.positionOfWall(currentPosition.getRightPosition()),
                 leftWall = maze.positionOfWall(currentPosition.getLeftPosition());
         if (maze.validMazePosition(currentPosition.getUpPosition()) && !upWall)
-            possibleStates.add(new MazeState(state, currentPosition.getUpPosition().toString(), state.cost + 10));
+            possibleStates.add(new MazeState(state, currentPosition.getUpPosition(), state.getCost() + 10));
         if (maze.validMazePosition(currentPosition.getUpRightPosition()) && !maze.positionOfWall(currentPosition.getUpRightPosition()) && (!upWall || !rightWall))
-            possibleStates.add(new MazeState(state, currentPosition.getUpRightPosition().toString(), state.cost + 15));
+            possibleStates.add(new MazeState(state, currentPosition.getUpRightPosition(), state.getCost() + 15));
         if (maze.validMazePosition(currentPosition.getRightPosition()) && !rightWall)
-            possibleStates.add(new MazeState(state, currentPosition.getRightPosition().toString(), state.cost + 10));
+            possibleStates.add(new MazeState(state, currentPosition.getRightPosition(), state.getCost() + 10));
         if (maze.validMazePosition(currentPosition.getDownRightPosition()) && !maze.positionOfWall(currentPosition.getDownRightPosition()) && (!downWall || !rightWall))
-            possibleStates.add(new MazeState(state, currentPosition.getDownRightPosition().toString(), state.cost + 15));
+            possibleStates.add(new MazeState(state, currentPosition.getDownRightPosition(), state.getCost() + 15));
         if (maze.validMazePosition(currentPosition.getDownPosition()) && !downWall)
-            possibleStates.add(new MazeState(state, currentPosition.getDownPosition().toString(), state.cost + 10));
+            possibleStates.add(new MazeState(state, currentPosition.getDownPosition(), state.getCost() + 10));
         if (maze.validMazePosition(currentPosition.getDownLeftPosition()) && !maze.positionOfWall(currentPosition.getDownLeftPosition()) && (!downWall || !leftWall))
-            possibleStates.add(new MazeState(state, currentPosition.getDownLeftPosition().toString(), state.cost + 15));
+            possibleStates.add(new MazeState(state, currentPosition.getDownLeftPosition(), state.getCost() + 15));
         if (maze.validMazePosition(currentPosition.getLeftPosition()) && !leftWall)
-            possibleStates.add(new MazeState(state, currentPosition.getLeftPosition().toString(), state.cost + 10));
+            possibleStates.add(new MazeState(state, currentPosition.getLeftPosition(), state.getCost() + 10));
         if (maze.validMazePosition(currentPosition.getUpLeftPosition()) && !maze.positionOfWall(currentPosition.getUpLeftPosition()) && (!upWall || !leftWall))
-            possibleStates.add(new MazeState(state, currentPosition.getUpLeftPosition().toString(), state.cost + 15));
+            possibleStates.add(new MazeState(state, currentPosition.getUpLeftPosition(), state.getCost() + 15));
         return possibleStates;
     }
 }

@@ -16,6 +16,6 @@ class priceComparator implements Comparator<AState> {
 
     @Override
     public int compare(AState o1, AState o2) {
-        return Integer.compare(o1.cost, o2.cost);
+        return Integer.compare(o1.getCost(), o2.getCost());
     }
 }

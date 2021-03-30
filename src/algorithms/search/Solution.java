@@ -21,9 +21,9 @@ public class Solution {
         this.path = new ArrayList<>();
         while (temp != null) {
             this.path.add(temp);
-            temp = temp.prevState;
+            temp = temp.getPrevState();
         }
-        this.cost = path.get(0).cost;
+        this.cost = path.get(0).getCost();
         Collections.reverse(path);
     }
 
