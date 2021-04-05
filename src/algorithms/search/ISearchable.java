@@ -20,5 +20,5 @@ public interface ISearchable {
      * @param state a valid state in the problem
      * @return all the possible next states of the given state
      */
-    ArrayList<AState> getAllPossibleStates(AState state);
+    ArrayList<AState> getAllSuccessors(AState state);
 }

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class RunSearchOnMaze3D {
     public static void main(String[] args) {
-    IMazeGenerator3D mg = new MyMaze3DGenerator();
-    Maze3D maze = mg.generate(3,10, 10);
+        IMazeGenerator3D mg = new MyMaze3DGenerator();
+        Maze3D maze = mg.generate(500, 500, 500);
 //        int[][][] map = {
 //                {
 //                        {0, 0, 1, 0, 1},
@@ -26,12 +26,12 @@ public class RunSearchOnMaze3D {
 //        Maze3D maze = new Maze3D(map, new Position3D(0,0,0), new Position3D(0,2,4));
 
         SearchableMaze3D searchableMaze = new SearchableMaze3D(maze);
-    maze.printColored();
+        maze.printColored();
 
-    solveProblem(searchableMaze, new BreadthFirstSearch());
-    solveProblem(searchableMaze, new DepthFirstSearch());
-    solveProblem(searchableMaze, new BestFirstSearch());
-}
+        solveProblem(searchableMaze, new BreadthFirstSearch());
+        solveProblem(searchableMaze, new DepthFirstSearch());
+        solveProblem(searchableMaze, new BestFirstSearch());
+    }
 
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {
         //Solve a searching problem with a searcher

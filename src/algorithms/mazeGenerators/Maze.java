@@ -228,14 +228,18 @@ public class Maze {
     public ArrayList<Position> getNeighbourWalls(Position currentPosition) {
         ArrayList<Position> wallsList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
-            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfWall(currentPosition.getUpPosition())) //UP
-                wallsList.add(currentPosition.getUpPosition());
-            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfWall(currentPosition.getDownPosition())) //DOWN
-                wallsList.add(currentPosition.getDownPosition());
-            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfWall(currentPosition.getLeftPosition())) //LEFT
-                wallsList.add(currentPosition.getLeftPosition());
-            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfWall(currentPosition.getRightPosition())) //RIGHT
-                wallsList.add(currentPosition.getRightPosition());
+            Position up = currentPosition.getUpPosition();
+            if (this.validMazePosition(up) && this.positionOfWall(up)) //UP
+                wallsList.add(up);
+            Position right = currentPosition.getRightPosition();
+            if (this.validMazePosition(right) && this.positionOfWall(right)) //RIGHT
+                wallsList.add(right);
+            Position down = currentPosition.getDownPosition();
+            if (this.validMazePosition(down) && this.positionOfWall(down)) //DOWN
+                wallsList.add(down);
+            Position left = currentPosition.getLeftPosition();
+            if (this.validMazePosition(left) && this.positionOfWall(left)) //LEFT
+                wallsList.add(left);
         }
         return wallsList;
     }
@@ -250,14 +254,18 @@ public class Maze {
     public ArrayList<Position> getNeighbourTiles(Position currentPosition) {
         ArrayList<Position> tilesList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
-            if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfTile(currentPosition.getUpPosition())) //UP
-                tilesList.add(currentPosition.getUpPosition());
-            if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfTile(currentPosition.getDownPosition())) //DOWN
-                tilesList.add(currentPosition.getDownPosition());
-            if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfTile(currentPosition.getLeftPosition())) //LEFT
-                tilesList.add(currentPosition.getLeftPosition());
-            if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfTile(currentPosition.getRightPosition())) //RIGHT
-                tilesList.add(currentPosition.getRightPosition());
+            Position up = currentPosition.getUpPosition();
+            if (this.validMazePosition(up) && this.positionOfTile(up)) //UP
+                tilesList.add(up);
+            Position down = currentPosition.getDownPosition();
+            if (this.validMazePosition(down) && this.positionOfTile(down)) //DOWN
+                tilesList.add(down);
+            Position left = currentPosition.getLeftPosition();
+            if (this.validMazePosition(left) && this.positionOfTile(left)) //LEFT
+                tilesList.add(left);
+            Position right = currentPosition.getRightPosition();
+            if (this.validMazePosition(right) && this.positionOfTile(right)) //RIGHT
+                tilesList.add(right);
         }
         return tilesList;
     }

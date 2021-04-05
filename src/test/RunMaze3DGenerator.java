@@ -8,26 +8,26 @@ public class RunMaze3DGenerator {
     }
 
     private static void testMazeGenerator(IMazeGenerator3D mazeGenerator) {
-        final int depth = 3, rows = 3, columns = 5;
+        final int depth = 3, rows = 10, columns = 10;
         // prints the time it takes the algorithm to run
         System.out.printf("Maze generation time(ms): %s %n", mazeGenerator.measureAlgorithmTimeMillis(depth, rows, columns));
         // generate another maze
-//        Maze3D maze = mazeGenerator.generate(depth, rows, columns);
-        int[][][] map = {
-                {
-                        {0, 0, 1, 0, 1},
-                        {0, 1, 1, 1, 0},
-                        {0, 1, 1, 0, 0}},
-                {
-                        {1, 1, 1, 0, 1},
-                        {1, 0, 0, 1, 0},
-                        {0, 0, 1, 0, 1}},
-                {
-                        {1, 1, 1, 0, 1},
-                        {1, 1, 0, 0, 0},
-                        {1, 1, 1, 0, 1}}
-        };
-        Maze3D maze = new Maze3D(map, new Position3D(0,0,0), new Position3D(0,2,4));
+        Maze3D maze = mazeGenerator.generate(depth, rows, columns);
+//        int[][][] map = {
+//                {
+//                        {0, 0, 1, 0, 1},
+//                        {0, 1, 1, 1, 0},
+//                        {0, 1, 1, 0, 0}},
+//                {
+//                        {1, 1, 1, 0, 1},
+//                        {1, 0, 0, 1, 0},
+//                        {0, 0, 1, 0, 1}},
+//                {
+//                        {1, 1, 1, 0, 1},
+//                        {1, 1, 0, 0, 0},
+//                        {1, 1, 1, 0, 1}}
+//        };
+//        Maze3D maze = new Maze3D(map, new Position3D(0,0,0), new Position3D(0,2,4));
         // prints the maze
         maze.print();
         // get the maze entrance

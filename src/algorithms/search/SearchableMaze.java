@@ -40,7 +40,7 @@ public class SearchableMaze implements ISearchable {
      * @return all the possible next states of the given state
      */
     @Override
-    public ArrayList<AState> getAllPossibleStates(AState state) {
+    public ArrayList<AState> getAllSuccessors(AState state) {
         Position currentPosition = (Position) state.getCurrentState();
         ArrayList<AState> possibleStates = new ArrayList<>();
         boolean upWall = maze.positionOfWall(currentPosition.getUpPosition()),

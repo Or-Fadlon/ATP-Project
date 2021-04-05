@@ -49,7 +49,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
                 this.NumberOfNodesEvaluated = visited.size();
                 return new Solution(currentState);
             }
-            for (AState a : domain.getAllPossibleStates(currentState)) { //4.3
+            for (AState a : domain.getAllSuccessors(currentState)) { //4.3
                 if (!visited.contains(a.toString())) { //4.3.1
                     visited.add(a.toString());
                     queue.add(a);

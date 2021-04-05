@@ -188,18 +188,24 @@ public class Maze3D {
         if (!this.validMazePosition(currentPosition)) {
             throw new IllegalArgumentException("one of the given positions is not a valid position in the maze");
         }
-        if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfWall(currentPosition.getUpPosition()))
-            wallsList.add(currentPosition.getUpPosition());
-        if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfWall(currentPosition.getDownPosition()))
-            wallsList.add(currentPosition.getDownPosition());
-        if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfWall(currentPosition.getLeftPosition()))
-            wallsList.add(currentPosition.getLeftPosition());
-        if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfWall(currentPosition.getRightPosition()))
-            wallsList.add(currentPosition.getRightPosition());
-        if (this.validMazePosition(currentPosition.getHigherPosition()) && this.positionOfWall(currentPosition.getHigherPosition()))
-            wallsList.add(currentPosition.getHigherPosition());
-        if (this.validMazePosition(currentPosition.getLowerPosition()) && this.positionOfWall(currentPosition.getLowerPosition()))
-            wallsList.add(currentPosition.getLowerPosition());
+        Position3D up = currentPosition.getUpPosition();
+        if (this.validMazePosition(up) && this.positionOfWall(up))
+            wallsList.add(up);
+        Position3D down = currentPosition.getDownPosition();
+        if (this.validMazePosition(down) && this.positionOfWall(down))
+            wallsList.add(down);
+        Position3D left = currentPosition.getLeftPosition();
+        if (this.validMazePosition(left) && this.positionOfWall(left))
+            wallsList.add(left);
+        Position3D right = currentPosition.getRightPosition();
+        if (this.validMazePosition(right) && this.positionOfWall(right))
+            wallsList.add(right);
+        Position3D higher = currentPosition.getHigherPosition();
+        if (this.validMazePosition(higher) && this.positionOfWall(higher))
+            wallsList.add(higher);
+        Position3D lower = currentPosition.getLowerPosition();
+        if (this.validMazePosition(lower) && this.positionOfWall(lower))
+            wallsList.add(lower);
         return wallsList;
     }
 
@@ -211,23 +217,29 @@ public class Maze3D {
      * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
      */
     public ArrayList<Position3D> getNeighbourTiles(Position3D currentPosition) {
-        ArrayList<Position3D> tilesList = new ArrayList<>();
+        ArrayList<Position3D> tileList = new ArrayList<>();
         if (!this.validMazePosition(currentPosition)) {
             throw new IllegalArgumentException("one of the given positions is not a valid position in the maze");
         }
-        if (this.validMazePosition(currentPosition.getUpPosition()) && this.positionOfTile(currentPosition.getUpPosition()))
-            tilesList.add(currentPosition.getUpPosition());
-        if (this.validMazePosition(currentPosition.getDownPosition()) && this.positionOfTile(currentPosition.getDownPosition()))
-            tilesList.add(currentPosition.getDownPosition());
-        if (this.validMazePosition(currentPosition.getLeftPosition()) && this.positionOfTile(currentPosition.getLeftPosition()))
-            tilesList.add(currentPosition.getLeftPosition());
-        if (this.validMazePosition(currentPosition.getRightPosition()) && this.positionOfTile(currentPosition.getRightPosition()))
-            tilesList.add(currentPosition.getRightPosition());
-        if (this.validMazePosition(currentPosition.getHigherPosition()) && this.positionOfTile(currentPosition.getHigherPosition()))
-            tilesList.add(currentPosition.getHigherPosition());
-        if (this.validMazePosition(currentPosition.getLowerPosition()) && this.positionOfTile(currentPosition.getLowerPosition()))
-            tilesList.add(currentPosition.getLowerPosition());
-        return tilesList;
+        Position3D up = currentPosition.getUpPosition();
+        if (this.validMazePosition(up) && this.positionOfTile(up))
+            tileList.add(up);
+        Position3D down = currentPosition.getDownPosition();
+        if (this.validMazePosition(down) && this.positionOfTile(down))
+            tileList.add(down);
+        Position3D left = currentPosition.getLeftPosition();
+        if (this.validMazePosition(left) && this.positionOfTile(left))
+            tileList.add(left);
+        Position3D right = currentPosition.getRightPosition();
+        if (this.validMazePosition(right) && this.positionOfTile(right))
+            tileList.add(right);
+        Position3D higher = currentPosition.getHigherPosition();
+        if (this.validMazePosition(higher) && this.positionOfTile(higher))
+            tileList.add(higher);
+        Position3D lower = currentPosition.getLowerPosition();
+        if (this.validMazePosition(lower) && this.positionOfTile(lower))
+            tileList.add(lower);
+        return tileList;
     }
 
     /**

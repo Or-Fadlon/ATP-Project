@@ -39,7 +39,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
             }
             if (!visited.contains(currentState.toString())) { //3.2
                 visited.add(currentState.toString()); //3.2.1
-                stack.addAll(domain.getAllPossibleStates(currentState)); //3.2.2
+                stack.addAll(domain.getAllSuccessors(currentState)); //3.2.2
             }
         }
         this.NumberOfNodesEvaluated = visited.size();

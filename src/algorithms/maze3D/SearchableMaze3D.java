@@ -40,7 +40,7 @@ public class SearchableMaze3D implements ISearchable {
      * @return all the possible next states of the given state
      */
     @Override
-    public ArrayList<AState> getAllPossibleStates(AState state) {
+    public ArrayList<AState> getAllSuccessors(AState state) {
         Position3D currentPosition = (Position3D) state.getCurrentState();
         ArrayList<AState> possibleStates = new ArrayList<>();
         if (maze.validMazePosition(currentPosition.getUpPosition()) && !maze.positionOfWall(currentPosition.getUpPosition())) // UP
