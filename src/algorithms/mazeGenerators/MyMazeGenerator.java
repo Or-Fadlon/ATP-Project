@@ -1,7 +1,9 @@
 package algorithms.mazeGenerators;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Stack;
 
 public class MyMazeGenerator extends AMazeGenerator {
     /**
@@ -13,7 +15,7 @@ public class MyMazeGenerator extends AMazeGenerator {
      */
     @Override
     public Maze generate(int rows, int columns) {
-        return primsMazeGenerator(rows, columns);
+        return DFSMazeGenerator(rows, columns);
     }
 
     /**
@@ -50,6 +52,51 @@ public class MyMazeGenerator extends AMazeGenerator {
                 maze.removeWall(currentPosition);
 //                maze.connectNeighbours(currentPosition, neighbour);
                 wallsList.addAll(maze.getNeighbourWalls(currentPosition));
+            }
+        }
+
+        maze.generateGoalPosition();
+        return maze;
+    }
+
+    /**
+     * maze generator using iterative DFS algorithm:
+     * <p>
+     * 1. Choose the initial cell, mark it as visited and push it to the stack
+     * 2. While the stack is not empty
+     * 2.1.     Pop a cell from the stack and make it a current cell
+     * 2.2.     If the current cell has any neighbours which have not been visited
+     * 2.2.1        Push the current cell to the stack
+     * 2.2.2        Choose one of the unvisited neighbours
+     * 2.2.3        Remove the wall between the current cell and the chosen cell
+     * 2.2.4        Mark the chosen cell as visited and push it to the stack
+     *
+     * @param rows    number of rows of the maze to generate
+     * @param columns number of columns of the maze to generate
+     * @return generated maze
+     */
+    private Maze DFSMazeGenerator(int rows, int columns) {
+        Random random = new Random();
+        Maze maze = new Maze(rows, columns);
+        HashSet<Position> visited = new HashSet<>();
+        Stack<Position> neighbours = new Stack<>();
+        ArrayList<Position> neighbourWalls;
+        maze.makeAllWalls();
+        maze.generateStartPosition();
+        Position currentPosition = maze.getStartPosition();
+        maze.removeWall(currentPosition);
+        neighbours.push(currentPosition);
+        visited.add(currentPosition);
+        while (!neighbours.isEmpty()) {
+            currentPosition = neighbours.pop();
+            neighbourWalls = maze.getPathOptions(currentPosition, visited);
+            if (neighbourWalls.size() != 0) {
+                neighbours.push(currentPosition);
+                Position randNeighbour = neighbourWalls.get(random.nextInt(neighbourWalls.size()));
+                maze.removeWall(randNeighbour);
+                maze.connectNeighbours(currentPosition, randNeighbour);
+                visited.add(randNeighbour);
+                neighbours.push(randNeighbour);
             }
         }
 

@@ -11,8 +11,10 @@ import java.util.HashSet;
 
 public class PrintSearchOnMaze {
     public static void main(String[] args) {
+        final int rows = 5, columns = 5;
         IMazeGenerator mg = new MyMazeGenerator();
-        Maze maze = mg.generate(5, 5);
+        System.out.printf("Maze generation time(ms): %s %n", mg.measureAlgorithmTimeMillis(rows, columns));
+        Maze maze = mg.generate(rows, columns);
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         maze.printColored();
         solveProblem(searchableMaze, new BreadthFirstSearch());
@@ -33,12 +35,12 @@ public class PrintSearchOnMaze {
             trace.add((Position) state.getCurrentState());
         ((SearchableMaze) domain).maze.printColoredTrace(trace);
 
-        for (int i = 0; i < solutionPath.size(); i++) {
-            System.out.printf("%s.%s%n", i, solutionPath.get(i));
-        }
+//        for (int i = 0; i < solutionPath.size(); i++) {
+//            System.out.printf("%s.%s%n", i, solutionPath.get(i));
+//        }
         System.out.printf("%s = %s%n", searcher.getName(), solution.getCost());
-//        System.out.println(String.format("%s.%s", 0, solutionPath.get(0)));
-//        System.out.println(String.format("%s.%s", solutionPath.size() - 1, solutionPath.get(solutionPath.size() - 1)));
+        System.out.println(String.format("%s.%s", 0, solutionPath.get(0)));
+        System.out.println(String.format("%s.%s", solutionPath.size() - 1, solutionPath.get(solutionPath.size() - 1)));
 
     }
 }

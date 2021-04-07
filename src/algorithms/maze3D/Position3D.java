@@ -122,6 +122,7 @@ public class Position3D {
 
     /**
      * two Points equals when its depth, row and column index equals
+     *
      * @param o
      * @return true - depth, row and column index equals. otherwise false
      */
@@ -135,5 +136,13 @@ public class Position3D {
         if (depth != that.depth) return false;
         if (row != that.row) return false;
         return column == that.column;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = depth;
+        result = 31 * result + row;
+        result = 31 * result + column;
+        return result;
     }
 }

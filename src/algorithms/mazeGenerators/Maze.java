@@ -3,6 +3,7 @@ package algorithms.mazeGenerators;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Represent a 2D maze
@@ -44,6 +45,14 @@ public class Maze {
      * print a colored console view of the maze
      */
     public void printColored() {
+        String ans = "";
+        if (this.getRowsSize() > 100 || this.getColumnsSize() > 100) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("this maze is big, are you sure you want to print it? (y/n)");
+            ans = in.nextLine();
+            if (!ans.equals("y") && !ans.equals("Y"))
+                return;
+        }
         final String RED = "\033[0;31m";
         final String GREEN = "\033[0;32m";
         final String BLACK_BACKGROUND = "\u001B[40m";
@@ -90,6 +99,14 @@ public class Maze {
      * @param trace Positions to highlight
      */
     public void printColoredTrace(HashSet<Position> trace) {
+        String ans = "";
+        if (this.getRowsSize() > 100 || this.getColumnsSize() > 100) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("this maze is big, are you sure you want to print it? (y/n)");
+            ans = in.nextLine();
+            if (!ans.equals("y") && !ans.equals("Y"))
+                return;
+        }
         final String RED = "\033[0;31m";
         final String GREEN = "\033[0;32m";
         final String RESET = "\033[0m";
@@ -130,10 +147,35 @@ public class Maze {
     }
 
     /**
+     * set start position in maze
+     *
+     * @param position valid Position in the maze
+     * @throws IllegalArgumentException given position in not valid position in the maze
+     */
+    public void setStartPosition(Position position) {
+        if (!this.validMazePosition(position))
+            throw new IllegalArgumentException("given position in not valid position in the maze");
+        this.startPosition = new Position(position);
+    }
+
+
+    /**
      * @return the goal Position of the maze
      */
     public Position getGoalPosition() {
         return new Position(this.goalPosition);
+    }
+
+    /**
+     * set goal position in maze
+     *
+     * @param position valid Position in the maze
+     * @throws IllegalArgumentException given position in not valid position in the maze
+     */
+    public void setGoalPosition(Position position) {
+        if (!this.validMazePosition(position))
+            throw new IllegalArgumentException("given position in not valid position in the maze");
+        this.goalPosition = new Position(position);
     }
 
     /**
@@ -271,6 +313,33 @@ public class Maze {
     }
 
     /**
+     * get all the neighbour WALLs that position 2 positions away given position
+     * neighbour is up/right/down/left to the position
+     *
+     * @param currentPosition position to get the surrounding positions
+     * @return all the surrounding WALLs positions of the given position
+     * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
+     */
+    public ArrayList<Position> getPathOptions(Position currentPosition, HashSet<Position> visited) {
+        ArrayList<Position> wallsList = new ArrayList<>();
+        if (this.validMazePosition(currentPosition)) {
+            Position up = currentPosition.getUpPosition().getUpPosition();
+            if (this.validMazePosition(up) && !visited.contains(up)) //UP
+                wallsList.add(up);
+            Position right = currentPosition.getRightPosition().getRightPosition();
+            if (this.validMazePosition(right) && !visited.contains(right)) //RIGHT
+                wallsList.add(right);
+            Position down = currentPosition.getDownPosition().getDownPosition();
+            if (this.validMazePosition(down) && !visited.contains(down)) //DOWN
+                wallsList.add(down);
+            Position left = currentPosition.getLeftPosition().getLeftPosition();
+            if (this.validMazePosition(left) && !visited.contains(left)) //LEFT
+                wallsList.add(left);
+        }
+        return wallsList;
+    }
+
+    /**
      * connect between two positions that have one block separate in the middle between them.
      * X?Y - ? for wall to remove
      *
@@ -313,8 +382,9 @@ public class Maze {
      */
     public void generateGoalPosition() {
         Random random = new Random();
-        int side = random.nextInt(4);
+        int side;
         do {
+            side = random.nextInt(4);
             switch (side) {
                 case 0 -> this.goalPosition = new Position(0, random.nextInt(this.getColumnsSize())); //UP
                 case 1 -> this.goalPosition = new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1); //RIGHT

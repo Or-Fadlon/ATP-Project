@@ -1,7 +1,11 @@
 package algorithms.maze3D;
 
+import algorithms.mazeGenerators.Position;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Represent a 3D maze
@@ -58,8 +62,18 @@ public class Maze3D {
      * print a colored console view of the maze
      */
     public void printColored() {
+        String ans = "";
+        if (this.getDepthSize() > 25 || this.getRowsSize() > 100 || this.getColumnsSize() > 100) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("this maze is big, are you sure you want to print it? (y/n)");
+            ans = in.nextLine();
+            if (!ans.equals("y") && !ans.equals("Y"))
+                return;
+        }
         final String RED = "\033[0;31m";
         final String GREEN = "\033[0;32m";
+        final String BLACK_BACKGROUND = "\u001B[40m";
+        final String WHITE_BACKGROUND = "\u001B[47m";
         final String RESET = "\033[0m";
         System.out.println("{");
         for (int i = 0; i < this.getDepthSize(); i++) {
@@ -70,8 +84,10 @@ public class Maze3D {
                         System.out.print(GREEN + " S" + RESET);
                     else if (this.goalPosition.equals(new Position3D(i, j, k)))
                         System.out.print(RED + " E" + RESET);
+                    else if (this.grid[i][j][k] == 1)
+                        System.out.print(BLACK_BACKGROUND + "  " + RESET);
                     else
-                        System.out.print(" " + (this.grid[i][j][k] == 1 ? "B" : " "));
+                        System.out.print("  ");
                 }
                 System.out.println(" }");
             }
@@ -243,6 +259,38 @@ public class Maze3D {
     }
 
     /**
+     * get all the neighbour WALLs position around given position
+     *
+     * @param currentPosition position to get the surrounding positions
+     * @return all the surrounding WALLs positions of the given position
+     * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
+     */
+    public ArrayList<Position3D> getPathOptions(Position3D currentPosition, HashSet<Position3D> visited) {
+        ArrayList<Position3D> wallsList = new ArrayList<>();
+        if (this.validMazePosition(currentPosition)) {
+            Position3D up = currentPosition.getUpPosition().getUpPosition();
+            if (this.validMazePosition(up) && !visited.contains(up)) //UP
+                wallsList.add(up);
+            Position3D right = currentPosition.getRightPosition().getRightPosition();
+            if (this.validMazePosition(right) && !visited.contains(right)) //RIGHT
+                wallsList.add(right);
+            Position3D down = currentPosition.getDownPosition().getDownPosition();
+            if (this.validMazePosition(down) && !visited.contains(down)) //DOWN
+                wallsList.add(down);
+            Position3D left = currentPosition.getLeftPosition().getLeftPosition();
+            if (this.validMazePosition(left) && !visited.contains(left)) //LEFT
+                wallsList.add(left);
+            Position3D higher = currentPosition.getHigherPosition().getHigherPosition();
+            if (this.validMazePosition(higher) && !visited.contains(higher))
+                wallsList.add(higher);
+            Position3D lower = currentPosition.getLowerPosition().getLowerPosition();
+            if (this.validMazePosition(lower) && !visited.contains(lower))
+                wallsList.add(lower);
+        }
+        return wallsList;
+    }
+
+    /**
      * connect between two positions that have one block separate in the middle between them.
      * X?Y - ? for wall to remove
      *
@@ -298,8 +346,9 @@ public class Maze3D {
      */
     public void generateGoalPosition() {
         Random random = new Random();
-        int side = random.nextInt(6);
+        int side;
         do {
+            side = random.nextInt(6);
             switch (side) {
                 case 0 -> this.goalPosition = new Position3D(0, random.nextInt(this.getRowsSize()), random.nextInt(this.getColumnsSize())); // UP
                 case 1 -> this.goalPosition = new Position3D(this.getDepthSize() - 1, random.nextInt(this.getRowsSize()), random.nextInt(this.getColumnsSize())); // DOWN
