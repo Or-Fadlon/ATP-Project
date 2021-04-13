@@ -3,7 +3,7 @@ package algorithms.maze3D;
 /**
  * abstract 3D maze generator
  */
-public abstract class AMaze3DGenerator implements IMazeGenerator3D {
+public abstract class AMaze3DGenerator implements IMaze3DGenerator {
 
     public long measureAlgorithmTimeMillis(int depth, int row, int column) {
         long startTime, finishTime;
