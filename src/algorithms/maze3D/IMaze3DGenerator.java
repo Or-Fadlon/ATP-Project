@@ -3,7 +3,7 @@ package algorithms.maze3D;
 /**
  * 3D maze generator interface
  */
-public interface IMazeGenerator3D {
+public interface IMaze3DGenerator {
     Maze3D generate(int depth, int row, int column);
     /**
      * measure the time take to generate maze
