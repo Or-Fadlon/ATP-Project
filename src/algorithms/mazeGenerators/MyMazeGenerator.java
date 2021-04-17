@@ -15,6 +15,8 @@ public class MyMazeGenerator extends AMazeGenerator {
      */
     @Override
     public Maze generate(int rows, int columns) {
+        if (rows == 2 || columns == 2)
+            return primsMazeGenerator(rows, columns);
         return DFSMazeGenerator(rows, columns);
     }
 
@@ -89,7 +91,7 @@ public class MyMazeGenerator extends AMazeGenerator {
         visited.add(currentPosition);
         while (!neighbours.isEmpty()) {
             currentPosition = neighbours.pop();
-            neighbourWalls = maze.getPathOptions(currentPosition, visited);
+            neighbourWalls = maze.wallsTwoBlocksAway(currentPosition, visited);
             if (neighbourWalls.size() != 0) {
                 neighbours.push(currentPosition);
                 Position randNeighbour = neighbourWalls.get(random.nextInt(neighbourWalls.size()));
