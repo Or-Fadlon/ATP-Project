@@ -20,7 +20,7 @@ public class Maze {
      * @param columns number of columns
      * @throws IllegalArgumentException if one one or more of the arguments are < 2
      */
-    public Maze(int rows, int columns) {
+    public Maze(int rows, int columns) throws IllegalArgumentException {
         if (columns < 2 || rows < 2)
             throw new IllegalArgumentException("one or more of the arguments are < 2");
         this.grid = new int[rows][columns];
@@ -152,7 +152,7 @@ public class Maze {
      * @param position valid Position in the maze
      * @throws IllegalArgumentException given position in not valid position in the maze
      */
-    public void setStartPosition(Position position) {
+    public void setStartPosition(Position position) throws IllegalArgumentException {
         if (!this.validMazePosition(position))
             throw new IllegalArgumentException("given position in not valid position in the maze");
         this.startPosition = new Position(position);
@@ -172,7 +172,7 @@ public class Maze {
      * @param position valid Position in the maze
      * @throws IllegalArgumentException given position in not valid position in the maze
      */
-    public void setGoalPosition(Position position) {
+    public void setGoalPosition(Position position) throws IllegalArgumentException {
         if (!this.validMazePosition(position))
             throw new IllegalArgumentException("given position in not valid position in the maze");
         this.goalPosition = new Position(position);
@@ -318,9 +318,8 @@ public class Maze {
      *
      * @param currentPosition position to get the surrounding positions
      * @return all the surrounding WALLs positions of the given position
-     * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
      */
-    public ArrayList<Position> getPathOptions(Position currentPosition, HashSet<Position> visited) {
+    public ArrayList<Position> wallsTwoBlocksAway(Position currentPosition, HashSet<Position> visited) {
         ArrayList<Position> wallsList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
             Position up = currentPosition.getUpPosition().getUpPosition();
@@ -345,8 +344,9 @@ public class Maze {
      *
      * @param currentPosition position of one - X
      * @param neighbour       position of one block away neighbour - Y
+     * @throws IllegalArgumentException one of the given positions is not a valid position in the
      */
-    public void connectNeighbours(Position currentPosition, Position neighbour) {
+    public void connectNeighbours(Position currentPosition, Position neighbour) throws IllegalArgumentException {
         if (!this.validMazePosition(currentPosition)) {
             throw new IllegalArgumentException("one of the given positions is not a valid position in the maze");
         }
