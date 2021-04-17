@@ -23,7 +23,7 @@ public class Maze3D {
      * @param columns number of columns
      * @throws IllegalArgumentException if one one or more of the arguments are < 2
      */
-    public Maze3D(int depth, int rows, int columns) {
+    public Maze3D(int depth, int rows, int columns) throws IllegalArgumentException {
         if (depth < 2 || columns < 2 || rows < 2)
             throw new IllegalArgumentException("one or more of the arguments are < 2");
         this.grid = new int[depth][rows][columns];
@@ -103,28 +103,58 @@ public class Maze3D {
     /**
      * print a console view of the maze
      */
-    public void print() {
+    public void myPrint() {
         System.out.println("{");
-        for (int i = 0; i < this.getDepthSize(); i++) {
-            for (int j = 0; j < this.getRowsSize(); j++) {
+        for (int depth = 0; depth < this.getDepthSize(); depth++) {
+            for (int row = 0; row < this.getRowsSize(); row++) {
                 System.out.print("{");
-                for (int k = 0; k < this.getColumnsSize(); k++) {
-                    if (this.startPosition.equals(new Position3D(i, j, k)))
+                for (int column = 0; column < this.getColumnsSize(); column++) {
+                    if (this.startPosition.equals(new Position3D(depth, row, column)))
                         System.out.print(" S");
-                    else if (this.goalPosition.equals(new Position3D(i, j, k)))
+                    else if (this.goalPosition.equals(new Position3D(depth, row, column)))
                         System.out.print(" E");
                     else
-                        System.out.print(" " + this.grid[i][j][k]);
+                        System.out.print(" " + this.grid[depth][row][column]);
                 }
                 System.out.println(" }");
             }
-            if (this.getDepthSize() - 1 != i) {
+            if (this.getDepthSize() - 1 != depth) {
                 for (int t = 0; t < this.getColumnsSize() * 2 + 3; t++)
                     System.out.print("-");
                 System.out.println();
             } else
                 System.out.println("}");
         }
+    }
+
+    /**
+     * print a console view of the maze
+     */
+    public void print() {
+        System.out.println("{");
+        for (int depth = 0; depth < grid.length; depth++) {
+            for (int row = 0; row < grid[0].length; row++) {
+                System.out.print("{ ");
+                for (int col = 0; col < grid[0][0].length; col++) {
+                    if (depth == startPosition.getDepthIndex() && row == startPosition.getRowIndex() && col == startPosition.getColumnIndex()) // if the position is the start - mark with S
+                        System.out.print("S ");
+                    else {
+                        if (depth == goalPosition.getDepthIndex() && row == goalPosition.getRowIndex() && col == goalPosition.getColumnIndex()) // if the position is the goal - mark with E
+                            System.out.print("E ");
+                        else
+                            System.out.print(grid[depth][row][col] + " ");
+                    }
+                }
+                System.out.println("}");
+            }
+            if (depth < grid.length - 1) {
+                System.out.print("---");
+                for (int i = 0; i < grid[0][0].length; i++)
+                    System.out.print("--");
+                System.out.println();
+            }
+        }
+        System.out.println("}");
     }
 
 
@@ -199,7 +229,7 @@ public class Maze3D {
      * @return all the surrounding WALLs positions of the given position
      * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
      */
-    public ArrayList<Position3D> getNeighbourWalls(Position3D currentPosition) {
+    public ArrayList<Position3D> getNeighbourWalls(Position3D currentPosition) throws IllegalArgumentException {
         ArrayList<Position3D> wallsList = new ArrayList<>();
         if (!this.validMazePosition(currentPosition)) {
             throw new IllegalArgumentException("one of the given positions is not a valid position in the maze");
@@ -232,7 +262,7 @@ public class Maze3D {
      * @return all the surrounding TILEs positions of the given position
      * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
      */
-    public ArrayList<Position3D> getNeighbourTiles(Position3D currentPosition) {
+    public ArrayList<Position3D> getNeighbourTiles(Position3D currentPosition) throws IllegalArgumentException {
         ArrayList<Position3D> tileList = new ArrayList<>();
         if (!this.validMazePosition(currentPosition)) {
             throw new IllegalArgumentException("one of the given positions is not a valid position in the maze");
@@ -259,13 +289,14 @@ public class Maze3D {
     }
 
     /**
-     * get all the neighbour WALLs position around given position
+     * get all the neighbour WALLs that position 2 blocks away the given position
+     * neighbour is up/right/down/left to the position
      *
      * @param currentPosition position to get the surrounding positions
      * @return all the surrounding WALLs positions of the given position
      * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
      */
-    public ArrayList<Position3D> getPathOptions(Position3D currentPosition, HashSet<Position3D> visited) {
+    public ArrayList<Position3D> wallsTwoBlocksAway(Position3D currentPosition, HashSet<Position3D> visited) {
         ArrayList<Position3D> wallsList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
             Position3D up = currentPosition.getUpPosition().getUpPosition();
@@ -281,10 +312,10 @@ public class Maze3D {
             if (this.validMazePosition(left) && !visited.contains(left)) //LEFT
                 wallsList.add(left);
             Position3D higher = currentPosition.getHigherPosition().getHigherPosition();
-            if (this.validMazePosition(higher) && !visited.contains(higher))
+            if (this.validMazePosition(higher) && !visited.contains(higher)) //HIGHER
                 wallsList.add(higher);
             Position3D lower = currentPosition.getLowerPosition().getLowerPosition();
-            if (this.validMazePosition(lower) && !visited.contains(lower))
+            if (this.validMazePosition(lower) && !visited.contains(lower)) //LOWER
                 wallsList.add(lower);
         }
         return wallsList;
@@ -296,8 +327,9 @@ public class Maze3D {
      *
      * @param currentPosition position of one - X
      * @param neighbour       position of one block away neighbour - Y
+     * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
      */
-    public void connectNeighbours(Position3D currentPosition, Position3D neighbour) {
+    public void connectNeighbours(Position3D currentPosition, Position3D neighbour) throws IllegalArgumentException {
         if (!validMazePosition(currentPosition) || !validMazePosition(neighbour))
             throw new IllegalArgumentException("one of the given positions is not a valid position in the maze");
         if (currentPosition.getDepthIndex() == neighbour.getDepthIndex()) {
