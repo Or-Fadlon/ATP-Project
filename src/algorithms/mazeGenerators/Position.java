@@ -23,10 +23,10 @@ public class Position {
 
     /***
      * constructor
-     * @throws IllegalArgumentException argument String don't match the format required: {row,column}
      * @param str format: {row,column}
+     * @throws IllegalArgumentException argument String don't match the format required: {row,column}
      */
-    public Position(String str) {
+    public Position(String str) throws IllegalArgumentException {
         if (str == null || str.length() < 5 || str.charAt(0) != '{' || str.charAt(str.length() - 1) != '}' || !str.contains(","))
             throw new IllegalArgumentException("argument String don't match the format required: {row,column}");
         String[] parts = str.split(",");
@@ -58,8 +58,9 @@ public class Position {
      * set new value to the Position row.
      *
      * @param row a Natural number
+     * @throws IllegalArgumentException the argument are not Natural number
      */
-    public void setRow(int row) {
+    public void setRow(int row) throws IllegalArgumentException {
         if (row < 0)
             throw new IllegalArgumentException("the argument are not Natural number");
         this.column = row;
@@ -76,8 +77,9 @@ public class Position {
      * set new value to the Position column.
      *
      * @param column a Natural number
+     * @throws IllegalArgumentException the argument are not Natural number
      */
-    public void setColumn(int column) {
+    public void setColumn(int column) throws IllegalArgumentException {
         if (column < 0)
             throw new IllegalArgumentException("the argument are not Natural number");
         this.row = column;
@@ -146,6 +148,7 @@ public class Position {
 
     /**
      * two Points equals when its row and column index equals
+     *
      * @param o object to equal
      * @return true - row and column index equals. otherwise false
      */

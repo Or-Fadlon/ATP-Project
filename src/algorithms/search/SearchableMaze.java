@@ -6,7 +6,7 @@ import algorithms.mazeGenerators.Position;
 import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable {
-    public final Maze maze; //TODO: private
+    private final Maze maze;
     private final MazeState startState, goalState;
 
     /**
@@ -15,12 +15,19 @@ public class SearchableMaze implements ISearchable {
      * @param maze 3D maze to solve
      * @throws IllegalArgumentException -> maze == null
      */
-    public SearchableMaze(Maze maze) {
+    public SearchableMaze(Maze maze) throws IllegalArgumentException {
         if (maze == null)
             throw new IllegalArgumentException("cant handle null maze");
         this.maze = maze;
         this.startState = new MazeState(null, maze.getStartPosition(), 0);
         this.goalState = new MazeState(null, maze.getGoalPosition(), 0);
+    }
+
+    /**
+     * @return maze we try to solve
+     */
+    public Maze getMaze() {
+        return maze;
     }
 
     @Override
@@ -41,8 +48,10 @@ public class SearchableMaze implements ISearchable {
      */
     @Override
     public ArrayList<AState> getAllSuccessors(AState state) {
-        Position currentPosition = (Position) state.getCurrentState();
         ArrayList<AState> possibleStates = new ArrayList<>();
+        if (state == null)
+            return possibleStates;
+        Position currentPosition = (Position) state.getCurrentState();
         boolean upWall = maze.positionOfWall(currentPosition.getUpPosition()),
                 downWall = maze.positionOfWall(currentPosition.getDownPosition()),
                 rightWall = maze.positionOfWall(currentPosition.getRightPosition()),

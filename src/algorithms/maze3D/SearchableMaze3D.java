@@ -15,7 +15,7 @@ public class SearchableMaze3D implements ISearchable {
      * @param maze 3D maze to solve
      * @throws IllegalArgumentException -> maze == null
      */
-    public SearchableMaze3D(Maze3D maze) {
+    public SearchableMaze3D(Maze3D maze) throws IllegalArgumentException {
         if (maze == null)
             throw new IllegalArgumentException("cant handle null maze");
         this.maze = maze;
@@ -41,8 +41,10 @@ public class SearchableMaze3D implements ISearchable {
      */
     @Override
     public ArrayList<AState> getAllSuccessors(AState state) {
-        Position3D currentPosition = (Position3D) state.getCurrentState();
         ArrayList<AState> possibleStates = new ArrayList<>();
+        if (state == null)
+            return possibleStates;
+        Position3D currentPosition = (Position3D) state.getCurrentState();
         if (maze.validMazePosition(currentPosition.getUpPosition()) && !maze.positionOfWall(currentPosition.getUpPosition())) // UP
             possibleStates.add(new Maze3DState(state, currentPosition.getUpPosition(), 0));
         if (maze.validMazePosition(currentPosition.getRightPosition()) && !maze.positionOfWall(currentPosition.getRightPosition())) // RIGHT

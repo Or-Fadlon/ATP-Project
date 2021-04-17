@@ -29,7 +29,7 @@ public class Position3D {
      * @param str format: "{depth,row,column}"
      * @throws IllegalArgumentException argument String don't match the format required: {depth,row,column}
      */
-    public Position3D(String str) {
+    public Position3D(String str) throws IllegalArgumentException {
         if (str == null || str.length() < 7 || str.charAt(0) != '{' || str.charAt(str.length() - 1) != '}' || !str.contains(","))
             throw new IllegalArgumentException("argument String don't match the format required: {depth,row,column}");
         String[] parts = str.split(",");
