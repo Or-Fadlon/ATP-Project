@@ -21,11 +21,15 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
      * 3.2.1          label v as discovered
      * 3.2.2          for all edges from v to w in G.adjacentEdges(v) do
      *                    S.push(w)
+     *
      * @param domain Searchable problem
      * @return solution to the given problem; empty Solution if solution not found
+     * @throws IllegalArgumentException null -> cant solve NULL problem.
      */
     @Override
-    public Solution solve(ISearchable domain) {
+    public Solution solve(ISearchable domain) throws IllegalArgumentException {
+        if (domain == null)
+            throw new IllegalArgumentException("cant solve NULL problem");
         HashSet<String> visited = new HashSet<>();
         Stack<AState> stack = new Stack<>(); //1
         AState currentState;
