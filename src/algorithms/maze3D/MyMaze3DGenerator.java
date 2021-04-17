@@ -1,8 +1,5 @@
 package algorithms.maze3D;
 
-import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.Position;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -20,6 +17,8 @@ public class MyMaze3DGenerator extends AMaze3DGenerator {
      */
     @Override
     public Maze3D generate(int depth, int rows, int columns) {
+        if (depth == 2 || rows == 2 || columns == 2)
+            return primsMazeGenerator(depth, rows, columns);
         return DFSMazeGenerator(depth, rows, columns);
     }
 
@@ -102,7 +101,7 @@ public class MyMaze3DGenerator extends AMaze3DGenerator {
         visited.add(currentPosition);
         while (!neighbours.isEmpty()) {
             currentPosition = neighbours.pop();
-            neighbourWalls = maze.getPathOptions(currentPosition, visited);
+            neighbourWalls = maze.wallsTwoBlocksAway(currentPosition, visited);
             if (neighbourWalls.size() != 0) {
                 neighbours.push(currentPosition);
                 Position3D randNeighbour = neighbourWalls.get(random.nextInt(neighbourWalls.size()));
