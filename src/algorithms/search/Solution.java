@@ -44,4 +44,9 @@ public class Solution {
     public int getCost() {
         return cost;
     }
+
+    public void print() {
+        for (int i = 0; i < this.path.size(); i++)
+            System.out.printf("%s.%s%n", i, this.path.get(i));
+    }
 }
