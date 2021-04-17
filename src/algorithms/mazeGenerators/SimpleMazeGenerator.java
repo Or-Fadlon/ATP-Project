@@ -12,7 +12,8 @@ public class SimpleMazeGenerator extends AMazeGenerator {
      * make all the maze full of walls.
      * creates one main way from start position to goal position.
      * randomly remove walls to add more complexity to the maze.
-     * @param rows number of rows of the maze to generate
+     *
+     * @param rows    number of rows of the maze to generate
      * @param columns number of columns of the maze to generate
      * @return Simple 2D maze
      */
