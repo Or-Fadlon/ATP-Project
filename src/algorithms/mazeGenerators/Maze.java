@@ -376,22 +376,30 @@ public class Maze {
     /**
      * randomly select a new goal position for the maze.
      * this position will be different from the starting point.
-     * must be a TILE
      *
-     * @throws ExceptionInInitializerError if all the boarders of the maze contains walls. //TODO: handle this issue
+     * @throws RuntimeException no possible GoalPositions in maze boarders.
      */
     public void generateGoalPosition() {
         Random random = new Random();
-        int side;
-        do {
-            side = random.nextInt(4);
-            switch (side) {
-                case 0 -> this.goalPosition = new Position(0, random.nextInt(this.getColumnsSize())); //UP
-                case 1 -> this.goalPosition = new Position(random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1); //RIGHT
-                case 2 -> this.goalPosition = new Position(this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())); //DOWN
-                case 3 -> this.goalPosition = new Position(random.nextInt(this.getRowsSize()), 0); //LEFT
-            }
+        ArrayList<Position> possibleGoals = new ArrayList<>();
+        int columnsSize = this.getColumnsSize(), rowSize = this.getRowsSize();
+        for (int i = 0; i < columnsSize; i++) {
+            if (this.grid[0][i] == TILE)
+                possibleGoals.add(new Position(0, i));
+            if (this.grid[rowSize - 1][i] == TILE)
+                possibleGoals.add(new Position(rowSize - 1, i));
         }
-        while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition()));
+        for (int i = 0; i < rowSize; i++) {
+            if (this.grid[i][0] == TILE)
+                possibleGoals.add(new Position(i, 0));
+            if (this.grid[i][columnsSize - 1] == TILE)
+                possibleGoals.add(new Position(i, columnsSize - 1));
+        }
+        if (possibleGoals.size() <= 1)
+            throw new RuntimeException("no possible GoalPositions in maze boarders");
+        do
+            this.setGoalPosition(possibleGoals.get(random.nextInt(possibleGoals.size())));
+        while (this.getStartPosition().equals(this.getGoalPosition()));
+
     }
 }

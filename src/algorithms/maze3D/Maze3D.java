@@ -374,23 +374,41 @@ public class Maze3D {
      * randomly select a new goal position for the maze.
      * this position will be different from the starting point.
      *
-     * @throws ExceptionInInitializerError if all the boarders of the maze contains walls. //TODO: handle this issue
+     * @throws RuntimeException no possible GoalPositions in maze boarders.
      */
     public void generateGoalPosition() {
         Random random = new Random();
-        int side;
-        do {
-            side = random.nextInt(6);
-            switch (side) {
-                case 0 -> this.goalPosition = new Position3D(0, random.nextInt(this.getRowsSize()), random.nextInt(this.getColumnsSize())); // UP
-                case 1 -> this.goalPosition = new Position3D(this.getDepthSize() - 1, random.nextInt(this.getRowsSize()), random.nextInt(this.getColumnsSize())); // DOWN
-                case 2 -> this.goalPosition = new Position3D(random.nextInt(this.getDepthSize()), random.nextInt(this.getRowsSize()), this.getColumnsSize() - 1); // RIGHT
-                case 3 -> this.goalPosition = new Position3D(random.nextInt(this.getDepthSize()), random.nextInt(this.getRowsSize()), 0); // LEFT
-                case 4 -> this.goalPosition = new Position3D(random.nextInt(this.getDepthSize()), this.getRowsSize() - 1, random.nextInt(this.getColumnsSize())); // FRONT
-                case 5 -> this.goalPosition = new Position3D(random.nextInt(this.getDepthSize()), 0, random.nextInt(this.getColumnsSize())); // BACK
+        ArrayList<Position3D> possibleGoals = new ArrayList<>();
+        int depthSize = this.getDepthSize(), columnsSize = this.getColumnsSize(), rowSize = this.getRowsSize();
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < columnsSize; j++) {
+                if (this.grid[0][i][j] == TILE)
+                    possibleGoals.add(new Position3D(0, i, j));
+                if (this.grid[depthSize - 1][i][j] == TILE)
+                    possibleGoals.add(new Position3D(depthSize - 1, i, j));
             }
         }
-        while (this.getStartPosition().equals(this.getGoalPosition()) || this.positionOfWall(this.getGoalPosition()));
+        for (int i = 0; i < depthSize; i++) {
+            for (int j = 0; j < columnsSize; j++) {
+                if (this.grid[i][0][j] == TILE)
+                    possibleGoals.add(new Position3D(i, 0, j));
+                if (this.grid[i][rowSize - 1][j] == TILE)
+                    possibleGoals.add(new Position3D(i, rowSize - 1, j));
+            }
+        }
+        for (int i = 0; i < depthSize; i++) {
+            for (int j = 0; j < rowSize; j++) {
+                if (this.grid[i][j][0] == TILE)
+                    possibleGoals.add(new Position3D(i, j, 0));
+                if (this.grid[i][j][columnsSize - 1] == TILE)
+                    possibleGoals.add(new Position3D(i, j, columnsSize - 1));
+            }
+        }
+        if (possibleGoals.size() <= 1)
+            throw new RuntimeException("no possible GoalPositions in maze boarders");
+        do
+            this.goalPosition = possibleGoals.get(random.nextInt(possibleGoals.size()));
+        while (this.getStartPosition().equals(this.getGoalPosition()));
     }
 
     /**
