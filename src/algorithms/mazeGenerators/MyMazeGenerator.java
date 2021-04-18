@@ -1,7 +1,6 @@
 package algorithms.mazeGenerators;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Stack;
 
@@ -52,7 +51,6 @@ public class MyMazeGenerator extends AMazeGenerator {
             if (neighbourTiles.size() == 1) { //3.1
                 Position neighbour = neighbourTiles.get(0);
                 maze.removeWall(currentPosition);
-//                maze.connectNeighbours(currentPosition, neighbour);
                 wallsList.addAll(maze.getNeighbourWalls(currentPosition));
             }
         }
@@ -80,7 +78,6 @@ public class MyMazeGenerator extends AMazeGenerator {
     private Maze DFSMazeGenerator(int rows, int columns) {
         Random random = new Random();
         Maze maze = new Maze(rows, columns);
-        HashSet<Position> visited = new HashSet<>();
         Stack<Position> neighbours = new Stack<>();
         ArrayList<Position> neighbourWalls;
         maze.makeAllWalls();
@@ -88,16 +85,14 @@ public class MyMazeGenerator extends AMazeGenerator {
         Position currentPosition = maze.getStartPosition();
         maze.removeWall(currentPosition);
         neighbours.push(currentPosition);
-        visited.add(currentPosition);
         while (!neighbours.isEmpty()) {
             currentPosition = neighbours.pop();
-            neighbourWalls = maze.wallsTwoBlocksAway(currentPosition, visited);
+            neighbourWalls = maze.wallsTwoBlocksAway(currentPosition);
             if (neighbourWalls.size() != 0) {
                 neighbours.push(currentPosition);
                 Position randNeighbour = neighbourWalls.get(random.nextInt(neighbourWalls.size()));
                 maze.removeWall(randNeighbour);
                 maze.connectNeighbours(currentPosition, randNeighbour);
-                visited.add(randNeighbour);
                 neighbours.push(randNeighbour);
             }
         }

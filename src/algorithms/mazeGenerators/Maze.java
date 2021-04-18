@@ -319,20 +319,20 @@ public class Maze {
      * @param currentPosition position to get the surrounding positions
      * @return all the surrounding WALLs positions of the given position
      */
-    public ArrayList<Position> wallsTwoBlocksAway(Position currentPosition, HashSet<Position> visited) {
+    public ArrayList<Position> wallsTwoBlocksAway(Position currentPosition) {
         ArrayList<Position> wallsList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
             Position up = currentPosition.getUpPosition().getUpPosition();
-            if (this.validMazePosition(up) && !visited.contains(up)) //UP
+            if (this.validMazePosition(up) && positionOfWall(up)) //UP
                 wallsList.add(up);
             Position right = currentPosition.getRightPosition().getRightPosition();
-            if (this.validMazePosition(right) && !visited.contains(right)) //RIGHT
+            if (this.validMazePosition(right) && positionOfWall(right)) //RIGHT
                 wallsList.add(right);
             Position down = currentPosition.getDownPosition().getDownPosition();
-            if (this.validMazePosition(down) && !visited.contains(down)) //DOWN
+            if (this.validMazePosition(down) && positionOfWall(down)) //DOWN
                 wallsList.add(down);
             Position left = currentPosition.getLeftPosition().getLeftPosition();
-            if (this.validMazePosition(left) && !visited.contains(left)) //LEFT
+            if (this.validMazePosition(left) && positionOfWall(left)) //LEFT
                 wallsList.add(left);
         }
         return wallsList;

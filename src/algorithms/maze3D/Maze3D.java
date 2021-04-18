@@ -296,26 +296,26 @@ public class Maze3D {
      * @return all the surrounding WALLs positions of the given position
      * @throws IllegalArgumentException one of the given positions is not a valid position in the maze
      */
-    public ArrayList<Position3D> wallsTwoBlocksAway(Position3D currentPosition, HashSet<Position3D> visited) {
+    public ArrayList<Position3D> wallsTwoBlocksAway(Position3D currentPosition) {
         ArrayList<Position3D> wallsList = new ArrayList<>();
         if (this.validMazePosition(currentPosition)) {
             Position3D up = currentPosition.getUpPosition().getUpPosition();
-            if (this.validMazePosition(up) && !visited.contains(up)) //UP
+            if (this.validMazePosition(up) && positionOfWall(up)) //UP
                 wallsList.add(up);
             Position3D right = currentPosition.getRightPosition().getRightPosition();
-            if (this.validMazePosition(right) && !visited.contains(right)) //RIGHT
+            if (this.validMazePosition(right) && positionOfWall(right)) //RIGHT
                 wallsList.add(right);
             Position3D down = currentPosition.getDownPosition().getDownPosition();
-            if (this.validMazePosition(down) && !visited.contains(down)) //DOWN
+            if (this.validMazePosition(down) && positionOfWall(down)) //DOWN
                 wallsList.add(down);
             Position3D left = currentPosition.getLeftPosition().getLeftPosition();
-            if (this.validMazePosition(left) && !visited.contains(left)) //LEFT
+            if (this.validMazePosition(left) && positionOfWall(left)) //LEFT
                 wallsList.add(left);
             Position3D higher = currentPosition.getHigherPosition().getHigherPosition();
-            if (this.validMazePosition(higher) && !visited.contains(higher)) //HIGHER
+            if (this.validMazePosition(higher) && positionOfWall(higher)) //HIGHER
                 wallsList.add(higher);
             Position3D lower = currentPosition.getLowerPosition().getLowerPosition();
-            if (this.validMazePosition(lower) && !visited.contains(lower)) //LOWER
+            if (this.validMazePosition(lower) && positionOfWall(lower)) //LOWER
                 wallsList.add(lower);
         }
         return wallsList;
