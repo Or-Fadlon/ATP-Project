@@ -6,7 +6,7 @@ package algorithms.search;
 public abstract class AState {
 
     private final AState prevState;
-    private final Object currentState; //TODO: change to Object?? POSITION?? is it ok to assume that every node have unique
+    private final Object currentState;
     private final int cost;
 
     public AState(AState prevState, Object currentState, int cost) {
