@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BestFirstSearchTest {
     MyMazeGenerator mg = new MyMazeGenerator();
-    Maze maze = new Maze(10, 10);
+    Maze maze = mg.generate(100,100);
     SearchableMaze searchableMaze = new SearchableMaze(maze);
     BestFirstSearch searcher = new BestFirstSearch();
     Solution solution = searcher.solve(searchableMaze);
@@ -21,7 +21,12 @@ class BestFirstSearchTest {
     BestFirstSearch bestFirstSearch = new BestFirstSearch();
 
     @Test
-    void solutionStartGoalPosition() {
+    void searchName() {
+        assertEquals(bestFirstSearch.getName(), "Best First Search");
+    }
+
+    @Test
+    void solutionStartAndGoalPosition() {
         assertEquals(maze.getStartPosition(), solutionPath.get(0).getCurrentState());
         assertEquals(maze.getGoalPosition(), solutionPath.get(solutionPath.size() - 1).getCurrentState());
     }
@@ -51,6 +56,10 @@ class BestFirstSearchTest {
         assertEquals(solution.getSolutionPath().size(), 0);
     }
 
-
-
+    @Test
+    void cheaperThenBFS() {
+        BreadthFirstSearch BFS = new BestFirstSearch();
+        Solution solutionBFS = BFS.solve(searchableMaze);
+        assertTrue(solution.getCost() <= solutionBFS.getCost());
+    }
 }
