@@ -49,7 +49,6 @@ public class MyMazeGenerator extends AMazeGenerator {
             currentPosition = wallsList.remove(random.nextInt(wallsList.size()));
             neighbourTiles = maze.getNeighbourTiles(currentPosition);
             if (neighbourTiles.size() == 1) { //3.1
-                Position neighbour = neighbourTiles.get(0);
                 maze.removeWall(currentPosition);
                 wallsList.addAll(maze.getNeighbourWalls(currentPosition));
             }

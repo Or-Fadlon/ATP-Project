@@ -1,7 +1,6 @@
 package algorithms.maze3D;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Stack;
 
@@ -42,27 +41,19 @@ public class MyMaze3DGenerator extends AMaze3DGenerator {
     private Maze3D primsMazeGenerator(int depth, int rows, int columns) {
         Random random = new Random();
         Maze3D maze = new Maze3D(depth, rows, columns);
-        HashSet<Position3D> visited = new HashSet<>();
         ArrayList<Position3D> wallsList;
         ArrayList<Position3D> neighbourTiles;
-        maze.makeAllWalls();
+        maze.makeAllWalls(); //1
         maze.generateStartPosition();
         Position3D currentPosition = maze.getStartPosition();
         maze.removeWall(currentPosition);
-        wallsList = new ArrayList<>(maze.getNeighbourWalls(currentPosition));
-        visited.addAll(maze.getNeighbourWalls(currentPosition));
-        visited.add(currentPosition);
-        while (!wallsList.isEmpty()) {
+        wallsList = new ArrayList<>(maze.getNeighbourWalls(currentPosition)); //2
+        while (!wallsList.isEmpty()) { //3
             currentPosition = wallsList.remove(random.nextInt(wallsList.size()));
             neighbourTiles = maze.getNeighbourTiles(currentPosition);
-            if (neighbourTiles.size() == 1) {
+            if (neighbourTiles.size() == 1) { //3.1
                 maze.removeWall(currentPosition);
-//                maze.connectNeighbours(currentPosition, neighbourTiles.get(0));
-                for (Position3D wall : maze.getNeighbourWalls(currentPosition))
-                    if (!visited.contains(wall)) {
-                        wallsList.add(wall);
-                        visited.add(wall);
-                    }
+                wallsList.addAll(maze.getNeighbourWalls(currentPosition));
             }
         }
 
@@ -90,7 +81,6 @@ public class MyMaze3DGenerator extends AMaze3DGenerator {
     private Maze3D DFSMazeGenerator(int depth, int rows, int columns) {
         Random random = new Random();
         Maze3D maze = new Maze3D(depth, rows, columns);
-        HashSet<Position3D> visited = new HashSet<>();
         Stack<Position3D> neighbours = new Stack<>();
         ArrayList<Position3D> neighbourWalls;
         maze.makeAllWalls();
@@ -98,16 +88,14 @@ public class MyMaze3DGenerator extends AMaze3DGenerator {
         Position3D currentPosition = maze.getStartPosition();
         maze.removeWall(currentPosition);
         neighbours.push(currentPosition);
-        visited.add(currentPosition);
         while (!neighbours.isEmpty()) {
             currentPosition = neighbours.pop();
-            neighbourWalls = maze.wallsTwoBlocksAway(currentPosition, visited);
+            neighbourWalls = maze.wallsTwoBlocksAway(currentPosition);
             if (neighbourWalls.size() != 0) {
                 neighbours.push(currentPosition);
                 Position3D randNeighbour = neighbourWalls.get(random.nextInt(neighbourWalls.size()));
                 maze.removeWall(randNeighbour);
                 maze.connectNeighbours(currentPosition, randNeighbour);
-                visited.add(randNeighbour);
                 neighbours.push(randNeighbour);
             }
         }
