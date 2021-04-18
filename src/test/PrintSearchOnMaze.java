@@ -11,7 +11,7 @@ import java.util.HashSet;
 
 public class PrintSearchOnMaze {
     public static void main(String[] args) {
-        final int rows = 5, columns = 5;
+        final int rows = 20, columns = 40;
         IMazeGenerator mg = new MyMazeGenerator();
         System.out.printf("Maze generation time(ms): %s %n", mg.measureAlgorithmTimeMillis(rows, columns));
         Maze maze = mg.generate(rows, columns);
@@ -33,7 +33,7 @@ public class PrintSearchOnMaze {
         HashSet<Position> trace = new HashSet<>();
         for (AState state : solutionPath)
             trace.add((Position) state.getCurrentState());
-        ((SearchableMaze) domain).maze.printColoredTrace(trace);
+        ((SearchableMaze) domain).getMaze().printColoredTrace(trace);
 
 //        for (int i = 0; i < solutionPath.size(); i++) {
 //            System.out.printf("%s.%s%n", i, solutionPath.get(i));

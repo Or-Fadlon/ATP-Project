@@ -26,21 +26,6 @@ class BestFirstSearchTest {
         assertEquals(maze.getGoalPosition(), solutionPath.get(solutionPath.size() - 1).getCurrentState());
     }
 
-//    @Test
-//    void validPath() {
-//        boolean flag = true;
-//        AState current, prev;
-//        for (int i = 1; i < solutionPath.size(); i++) {
-//            flag = true;
-//            prev = solutionPath.get(i - 1);
-//            current = solutionPath.get(i);
-//            if (prev.equals(current))
-//                flag = false;
-//
-//            assertTrue(flag);
-//        }
-//    }
-
     @Test
     void nullCheck() {
         boolean flag = false;
@@ -65,5 +50,7 @@ class BestFirstSearchTest {
         Solution solution = bestFirstSearch.solve(new SearchableMaze(maze));
         assertEquals(solution.getSolutionPath().size(), 0);
     }
+
+
 
 }
