@@ -12,15 +12,18 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
     public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
             ObjectInputStream dimensionInputStream = new ObjectInputStream(inFromClient);
-            SimpleCompressorOutputStream mazeCompressedOutputStream = new SimpleCompressorOutputStream(new ObjectOutputStream(outToClient));
+            ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
             int[] mazeDimensions = (int[]) dimensionInputStream.readObject();
             Class<?> mazeGeneratorClass = Class.forName("algorithms.mazeGenerators." + Configurations.getInstance().getMazeGeneratingAlgorithm());
             IMazeGenerator mazeGenerator = (IMazeGenerator) mazeGeneratorClass.getDeclaredConstructor().newInstance();
             Maze maze = mazeGenerator.generate(mazeDimensions[0], mazeDimensions[1]);
-
-            mazeCompressedOutputStream.write(maze.toByteArray());
-            mazeCompressedOutputStream.flush();
-            mazeCompressedOutputStream.close();
+//TODO:COMPRESS BEFORE SEND!!
+            ByteArrayOutputStream ba = new ByteArrayOutputStream();
+            SimpleCompressorOutputStream compressorOutputStream = new SimpleCompressorOutputStream(ba);
+            compressorOutputStream.write(maze.toByteArray());
+            toClient.writeObject(ba.toByteArray());
+            toClient.flush();
+            toClient.close();
         } catch (SocketException e) {
             System.out.println("Lost connection with client");
         } catch (IOException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException
