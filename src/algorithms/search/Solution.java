@@ -1,13 +1,13 @@
 package algorithms.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * Solution of a problem
  */
-public class Solution {
-
+public class Solution implements Serializable {
     private final ArrayList<AState> path;
     private int cost;
 

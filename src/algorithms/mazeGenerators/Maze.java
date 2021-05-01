@@ -1,11 +1,12 @@
 package algorithms.mazeGenerators;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Represent a 2D maze
  */
-public class Maze {
+public class Maze implements Serializable {
     private static final int WALL = 1, TILE = 0;
     private int[][] grid;
     private Position startPosition, goalPosition;
@@ -42,14 +43,14 @@ public class Maze {
      * constructor
      * 0,1-row size. 2,3-column size. 4,5-start position row. 6,7-start position column.
      * 8,9-goal position row. 10,11-goal position column. 12+ -the maze
-     * @param bytes in the format.
+     * @param bytes in the format. first 12 cells using base 127
      * @throws IllegalArgumentException the array was given not in the right format.
      */
     public Maze(byte[] bytes) throws IllegalArgumentException {
         try {
-        this.grid = new int[base255ToDecimal(bytes[0], bytes[1])][base255ToDecimal(bytes[2], bytes[3])];
-        this.startPosition = new Position(base255ToDecimal(bytes[4], bytes[5]),base255ToDecimal(bytes[6], bytes[7]));
-        this.goalPosition = new Position(base255ToDecimal(bytes[8], bytes[9]),base255ToDecimal(bytes[10], bytes[11]));
+        this.grid = new int[base127ToDecimal(bytes[0], bytes[1])][base127ToDecimal(bytes[2], bytes[3])];
+        this.startPosition = new Position(base127ToDecimal(bytes[4], bytes[5]), base127ToDecimal(bytes[6], bytes[7]));
+        this.goalPosition = new Position(base127ToDecimal(bytes[8], bytes[9]), base127ToDecimal(bytes[10], bytes[11]));
 
         int counter = 12;
         for (int i=0; i<this.grid.length; i++)
@@ -431,11 +432,11 @@ public class Maze {
      * @return maze as an array of bytes, first 12 cells contains the meta data
      */
     public byte[] toByteArray() {
-        byte[] metaData = concatenateArrays(decimalToBase255(this.getRowsSize()), decimalToBase255(this.getColumnsSize()));
-        byte[] metaStart = concatenateArrays(decimalToBase255(this.getStartPosition().getRowIndex()),
-                decimalToBase255(this.getStartPosition().getColumnIndex()));
-        byte[] metaGoal = concatenateArrays(decimalToBase255(this.getGoalPosition().getRowIndex()),
-                decimalToBase255(this.getGoalPosition().getColumnIndex()));
+        byte[] metaData = concatenateArrays(decimalToBase127(this.getRowsSize()), decimalToBase127(this.getColumnsSize()));
+        byte[] metaStart = concatenateArrays(decimalToBase127(this.getStartPosition().getRowIndex()),
+                decimalToBase127(this.getStartPosition().getColumnIndex()));
+        byte[] metaGoal = concatenateArrays(decimalToBase127(this.getGoalPosition().getRowIndex()),
+                decimalToBase127(this.getGoalPosition().getColumnIndex()));
         metaData = concatenateArrays(metaData, metaStart);
         metaData = concatenateArrays(metaData, metaGoal);
 
@@ -451,15 +452,15 @@ public class Maze {
     }
 
     /**
-     * transfer decimal number into base 255.
-     * maximum number 65,280
-     * @param num number to transfer (maximum 65,280)
+     * transfer decimal number into base 127.
+     * maximum number 16,256
+     * @param num number to transfer (maximum 16,256)
      * @return 2 cells, 0-lsb 1-msb
      */
-    private byte[]decimalToBase255(int num) {
+    private byte[] decimalToBase127(int num) {
         byte[] result = new byte[2];
-        result[0] = (byte) (num % 255);
-        result[1] = (byte) ((num / 255)%255);
+        result[0] = (byte) (num % 127);
+        result[1] = (byte) ((num / 127)%127);
         return result;
     }
 
@@ -479,13 +480,13 @@ public class Maze {
     }
 
     /**
-     * transfer base 255 into decimal number.
-     * maximum decimal number 65,280
-     * @param lsb the lsb of the 255 base number
-     * @param msb the msb of the 255 base number
+     * transfer base 127 into decimal number.
+     * maximum decimal number 16,256
+     * @param lsb the lsb of the 127 base number
+     * @param msb the msb of the 127 base number
      * @return decimal number
      */
-    private static int base255ToDecimal(byte lsb, byte msb) {
-        return msb * 255 + lsb;
+    private static int base127ToDecimal(byte lsb, byte msb) {
+        return msb * 127 + lsb;
     }
 }

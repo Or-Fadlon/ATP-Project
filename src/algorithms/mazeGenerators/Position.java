@@ -1,11 +1,13 @@
 package algorithms.mazeGenerators;
 
+import java.io.Serializable;
+
 /**
  * this class represents a position in 2D area.
  * we think about our area as a table with x as column number and y as a row.
  * the values of the row and column are Integer number.
  */
-public class Position {
+public class Position implements Serializable {
     private int column, row;
 
     /**
