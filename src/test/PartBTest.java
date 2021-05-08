@@ -1,5 +1,3 @@
-package test;
-
 import Client.*;
 import IO.MyCompressorOutputStream;
 import IO.MyDecompressorInputStream;
@@ -16,24 +14,31 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-class Main {
+public class Main {
 
     private static final String resultsFilePath = "results.txt";
     private static final String logFilePath = "results.log";
-    private static final int ServerListeningIntervalMS = 1000;
     private static int Port_ServerMazeGenerating = getRandomNumber(5000, 6000);
     private static int Port_ServerSearchProblemSolver = getRandomNumber(6001, 7000);
     private static int total_test = 0;
     private static int total_pass = 0;
     private static double avg_comp;
+    private static final int ServerListeningIntervalMS = 1000;
+    //<editor-fold desc="General">
+    public static enum TestStatus {
+        Passed, Failed;
+    }
 
     private static String getTestStatusString(boolean testPassed) {
         return testPassed ? TestStatus.Passed.toString() : TestStatus.Failed.toString();
     }
 
-    private static void appendToFile(String text, String filePath) {
+    private static void appendToFile(String text, String filePath){
         try (java.io.FileWriter fw = new java.io.FileWriter(filePath, true)) {
             fw.write(text + "\r\n");
         } catch (IOException ex) {
@@ -41,11 +46,11 @@ class Main {
         }
     }
 
-    private static void appendToResultsFile(String text) {
+    private static void appendToResultsFile(String text){
         appendToFile(text, resultsFilePath);
     }
 
-    private static void appendToLogFile(String text) {
+    private static void appendToLogFile(String text){
         appendToFile(text, logFilePath);
     }
 
@@ -56,18 +61,21 @@ class Main {
 
     private static void appendExceptionToFile(Exception e, String filePath) {
         String message = e.getMessage();
-        if (message == null) {
-            message = String.valueOf(e);
+        if (message == null)
+        {
+            message =  String.valueOf(e);
         }
-        appendToFile(String.format("Exception: %s", message), filePath);
-        if (e.getStackTrace().length > 1) {
+        appendToFile(String.format("Exception: %s", message),filePath);
+        if (e.getStackTrace().length > 1)
+        {
             String msg = String.valueOf(e.getStackTrace()[0]);
             appendToFile(String.format("Exception Stack Trace: %s", msg), filePath);
-        } else {
+        }
+        else
+        {
             int x = 1;
         }
     }
-
     //</editor-fold>
     private static int getRandomNumber(int from, int to) {
         if (from < to)
@@ -80,21 +88,22 @@ class Main {
             return socket.getLocalPort();
         }
     }
-
     public static void main(String[] args) {
         try {
 
             Test_CompressDecompressMaze();
 
             Test_CommunicateWithServers();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.out.println("Thats a problema");
         }
     }
 
     //<editor-fold desc="Test_CompressDecompressMaze">
     private static void Test_CompressDecompressMaze() {
-        double averageCompressionRate = 0;
+        double averageCompressionRate=0;
         int size = 5;
         String mazeFileName = "savedMaze.maze";
         AMazeGenerator mazeGenerator = new MyMazeGenerator();
@@ -106,6 +115,7 @@ class Main {
             out.flush();
             out.close();
         } catch (IOException e) {
+//
             appendToResultsFile(String.valueOf(total_test));
         }
 
@@ -119,17 +129,20 @@ class Main {
 
         }
         File compressed = new File("savedMaze.maze");
-        appendToResultsFile("compressed size - " + (double) compressed.length() / 1024);/**/
+        //appendToResultsFile("compressed size - " + (double) compressed.length() / 1024);
         double current_comp = compressed.length();
-        appendToResultsFile("compression rate - " + (((double)compressed.length() / 1024) / mazeOriginalSize) * 100);/**/
+        //appendToResultsFile("compression rate - " + (((double)compressed.length() / 1024) / mazeOriginalSize) * 100);
         Maze loadedMaze = new Maze(savedMazeBytes);
         boolean areMazesEquals = Arrays.equals(loadedMaze.toByteArray(), maze.toByteArray());
-        if (areMazesEquals == true) {
+        if (areMazesEquals == true)
+        {
             total_pass++;
-        } else {
+        }
+        else {
             appendToResultsFile(String.valueOf(total_test));
         }
     }
+    //</editor-fold>
 
     //<editor-fold desc="Test_CommunicateWithServers">
     private static void Test_CommunicateWithServers() {
@@ -151,7 +164,6 @@ class Main {
         mazeGeneratingServer.stop();
         solveSearchProblemServer.stop();
     }
-    //</editor-fold>
 
     private static void CommunicateWithServer_MazeGenerating(int i) {
         AtomicInteger testsPassed = new AtomicInteger(0);
@@ -161,13 +173,13 @@ class Main {
                 public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
                     try {
                         total_test++;
-                        int size = (int) (50 * (i + 1));
+                        int size = (int) (50 * (i+1));
                         ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
-                        ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                         toServer.flush();
                         int[] mazeDimensions = new int[]{size, size};
                         toServer.writeObject(mazeDimensions); //send maze dimensions to server
                         toServer.flush();
+                        ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                         byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
                         InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
                         byte[] decompressedMaze = new byte[1000000 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
@@ -175,7 +187,9 @@ class Main {
                         Maze maze = new Maze(decompressedMaze);
                         if (maze.toByteArray().length > 1000) {
                             testsPassed.incrementAndGet();
-                        } else {
+                        }
+                        else
+                        {
                             appendToResultsFile(String.valueOf(total_test));
                         }
                     } catch (Exception e) {
@@ -187,9 +201,8 @@ class Main {
 
         } finally {
         }
-        total_pass += testsPassed.get();
+        total_pass +=  testsPassed.get();
     }
-
     private static void CommunicateWithServer_SolveSearchProblem(int i) {
         AtomicInteger testsPassed = new AtomicInteger(0);
         double parallelTests = 5;
@@ -199,7 +212,7 @@ class Main {
                 public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
                     try {
                         total_test++;
-                        int size = (int) (50 * (i + 1));
+                        int size = (int) (50 * (i+1));
                         ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
                         ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                         toServer.flush();
@@ -212,9 +225,11 @@ class Main {
 
                         //Print Maze Solution retrieved from the server
                         ArrayList<AState> mazeSolutionSteps = mazeSolution.getSolutionPath();
-                        if (!mazeSolutionSteps.isEmpty()) {
+                        if(!mazeSolutionSteps.isEmpty()){
                             testsPassed.incrementAndGet();
-                        } else {
+                        }
+                        else
+                        {
                             appendToResultsFile(String.valueOf(total_test));
                         }
                     } catch (Exception e) {
@@ -227,12 +242,7 @@ class Main {
 
         } finally {
         }
-        total_pass += testsPassed.get();
-    }
-
-    //<editor-fold desc="General">
-    public static enum TestStatus {
-        Passed, Failed;
+        total_pass +=  testsPassed.get();
     }
     //</editor-fold>
 }
