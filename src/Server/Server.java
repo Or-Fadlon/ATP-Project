@@ -18,11 +18,18 @@ public class Server {
         this.port = port;
         this.listeningIntervalMS = listeningIntervalMS;
         this.strategy = strategy;
-        // fix to 3 threads //TODO: its ok?
         this.threadPool = Executors.newFixedThreadPool(Configurations.getInstance().getThreadPoolSize());
     }
 
     public void start() {
+        Thread server = new Thread(() -> {
+            this.run();
+            System.out.println("Server stopped");
+        });
+        server.start();
+    }
+
+    public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(this.port);
             serverSocket.setSoTimeout(this.listeningIntervalMS);
@@ -54,7 +61,7 @@ public class Server {
 
     private void handleClient(Socket clientSocket) {
         try {
-            this.strategy.applyStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            this.strategy.ServerStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
             clientSocket.close();
         } catch (IOException e) {
             this.run = false;

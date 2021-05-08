@@ -1,0 +1,10 @@
+1
+compressed size - 0.015625
+compression rate - 0.04222972972972973
+1
+compressed size - 0.015625
+compression rate - 0.04222972972972973
+1
+compressed size - 0.015625
+compression rate - 0.04222972972972973
+1
