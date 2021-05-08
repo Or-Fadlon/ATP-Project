@@ -2,6 +2,7 @@ package IO;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class SimpleDecompressorInputStream extends InputStream {
     private InputStream in;
@@ -10,8 +11,69 @@ public class SimpleDecompressorInputStream extends InputStream {
         this.in = in;
     }
 
+    /**
+     * decompress byte array that represent a Maze.
+     * 255,0,15,6 - 255+15 times 1 and then 6 times 0.
+     *
+     * @param b      input array to decompress
+     * @param target in-place changes the values to the decompress form of the input
+     * @return 0 - fail, 1 - success //TODO: is this the right way to handle this????
+     * @throws IllegalArgumentException the target byte Array given in too small
+     */
+    private static int decompress(byte[] b, byte[] target) throws IllegalArgumentException {
+        ArrayList<Byte> holder = new ArrayList<>(); //placeholder for our return array
+        byte countingType = 1; //1-wall, 0-tile
+        //insert meta data
+        for (int i = 0; i < 12; i++)
+            holder.add(b[i]);
+
+        //check target match the expected
+        int expectedSize = (holder.get(0) + holder.get(1)*127) * (holder.get(2) + holder.get(3)*127) + 12;
+        if (target.length < expectedSize)
+            throw new IllegalArgumentException("the target byte Array given in too small");
+
+        //compress maze
+        for (int i = 12; i < b.length; i++) {
+            int value = unsignedByteToInt(b[i]);
+            for (int j = 0; j < value; j++)
+                holder.add(countingType);
+            countingType = countingType == 1 ? (byte) 0 : 1; //change type
+        }
+
+        for (int i = 0; i < holder.size(); i++)
+            target[i] = holder.get(i);
+
+        return 1;
+    }
+
+    /**
+     * convert "unsigned-byte like" number into normal one.
+     *
+     * @param num number in "unsigned-byte like" format
+     * @return positive number represent the same value, negative numbers represent (num*-1)+127
+     */
+    private static int unsignedByteToInt(byte num) {
+        int result;
+        if (num >= 0)
+            result = num;
+        else
+            result = num + 256;
+        return result;
+    }
+
     @Override
-    public byte[] read() throws IOException {
-        return null;
+    public int read() throws IOException {
+        return 0;
+    }
+
+    @Override
+    public int read(byte[] b) throws IOException, IllegalArgumentException {
+        return decompress(in.readAllBytes(), b);
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.in.close();
+        super.close();
     }
 }
