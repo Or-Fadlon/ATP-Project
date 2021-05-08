@@ -1,5 +1,6 @@
 package Server;
 
+import IO.MyCompressorOutputStream;
 import IO.SimpleCompressorOutputStream;
 import algorithms.mazeGenerators.*;
 
@@ -9,7 +10,7 @@ import java.net.SocketException;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy {
     @Override
-    public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
+    public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
             ObjectInputStream dimensionInputStream = new ObjectInputStream(inFromClient);
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
@@ -17,10 +18,13 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
             Class<?> mazeGeneratorClass = Class.forName("algorithms.mazeGenerators." + Configurations.getInstance().getMazeGeneratingAlgorithm());
             IMazeGenerator mazeGenerator = (IMazeGenerator) mazeGeneratorClass.getDeclaredConstructor().newInstance();
             Maze maze = mazeGenerator.generate(mazeDimensions[0], mazeDimensions[1]);
-//TODO:COMPRESS BEFORE SEND!!
+
+            //TODO:COMPRESS BEFORE SEND!!
             ByteArrayOutputStream ba = new ByteArrayOutputStream();
-            SimpleCompressorOutputStream compressorOutputStream = new SimpleCompressorOutputStream(ba);
+            MyCompressorOutputStream compressorOutputStream = new MyCompressorOutputStream(ba);
             compressorOutputStream.write(maze.toByteArray());
+            //TODO: up don't look good but work
+
             toClient.writeObject(ba.toByteArray());
             toClient.flush();
             toClient.close();
