@@ -1,6 +1,10 @@
 package Server;
 
+import algorithms.search.*;
+import algorithms.mazeGenerators.*;
+
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 /**
@@ -20,7 +24,6 @@ class Configurations
     // private constructor restricted to this class itself
     private Configurations()
     {
-        //TODO: handle a case when the file in exist but is empty
         File file = new File("resources/config.properties");
         try {
             if (file.createNewFile()) {
@@ -72,11 +75,22 @@ class Configurations
         return mazeGeneratingAlgorithm;
     }
 
-    public void setMazeGeneratingAlgorithm(String mazeGeneratingAlgorithm) {
-        //TODO: handle algorithm not exist
+    /**
+     *
+     * @param mazeGeneratingAlgorithm
+     * @throws ClassNotFoundException Given class isn't implementing IMazeGenerator
+     */
+    public void setMazeGeneratingAlgorithm(String mazeGeneratingAlgorithm) throws ClassNotFoundException {
+        try {
+            Class<?> mazeGenerateClass = Class.forName("algorithms.mazeGenerators." + mazeSearchingAlgorithm);
+            IMazeGenerator mazeGenerateAlgorithm = (IMazeGenerator) mazeGenerateClass.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            throw new ClassNotFoundException("Given class isn't implementing IMazeGenerator");
+        }
+
         try {
             FileOutputStream fileOut = new FileOutputStream("resources/config.properties");
-            properties.setProperty("mazeGeneratingAlgorithm", "" + threadPoolSize);
+            properties.setProperty("mazeGeneratingAlgorithm", mazeGeneratingAlgorithm);
             properties.store(fileOut,null);
         }
         catch (IOException io){
@@ -89,11 +103,22 @@ class Configurations
         return mazeSearchingAlgorithm;
     }
 
-    public void setMazeSearchingAlgorithm(String mazeSearchingAlgorithm) {
-        //TODO: handle algorithm not exist
+    /**
+     *
+     * @param mazeSearchingAlgorithm
+     * @throws ClassNotFoundException Given class isn't implementing ISearchingAlgorithm
+     */
+    public void setMazeSearchingAlgorithm(String mazeSearchingAlgorithm) throws ClassNotFoundException {
+        try {
+            Class<?> mazeSearchClass = Class.forName("algorithms.search." + mazeSearchingAlgorithm);
+            ISearchingAlgorithm mazeSearchAlgorithm = (ISearchingAlgorithm) mazeSearchClass.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            throw new ClassNotFoundException("Given class isn't implementing ISearchingAlgorithm");
+        }
+
         try {
             FileOutputStream fileOut = new FileOutputStream("resources/config.properties");
-            properties.setProperty("mazeSearchingAlgorithm", "" + threadPoolSize);
+            properties.setProperty("mazeSearchingAlgorithm", mazeSearchingAlgorithm);
             properties.store(fileOut,null);
         }
         catch (IOException io){
