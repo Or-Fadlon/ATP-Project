@@ -16,12 +16,9 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Main {
+class Main {
 
     private static final String resultsFilePath = "results.txt";
     private static final String logFilePath = "results.log";
@@ -109,7 +106,6 @@ public class Main {
             out.flush();
             out.close();
         } catch (IOException e) {
-//
             appendToResultsFile(String.valueOf(total_test));
         }
 
@@ -123,9 +119,9 @@ public class Main {
 
         }
         File compressed = new File("savedMaze.maze");
-        //appendToResultsFile("compressed size - " + (double) compressed.length() / 1024);
+        appendToResultsFile("compressed size - " + (double) compressed.length() / 1024);/**/
         double current_comp = compressed.length();
-        //appendToResultsFile("compression rate - " + (((double)compressed.length() / 1024) / mazeOriginalSize) * 100);
+        appendToResultsFile("compression rate - " + (((double)compressed.length() / 1024) / mazeOriginalSize) * 100);/**/
         Maze loadedMaze = new Maze(savedMazeBytes);
         boolean areMazesEquals = Arrays.equals(loadedMaze.toByteArray(), maze.toByteArray());
         if (areMazesEquals == true) {
