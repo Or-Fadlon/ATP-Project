@@ -1,3 +1,5 @@
+package test;
+
 import Client.*;
 import IO.MyCompressorOutputStream;
 import IO.MyDecompressorInputStream;
@@ -19,7 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Main {
+class Main {
 
     private static final String resultsFilePath = "results.txt";
     private static final String logFilePath = "results.log";
