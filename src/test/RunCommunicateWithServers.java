@@ -1,7 +1,6 @@
 package test;
 
 import IO.MyDecompressorInputStream;
-import IO.SimpleDecompressorInputStream;
 import Server.*;
 import Client.*;
 import algorithms.mazeGenerators.Maze;
@@ -25,16 +24,16 @@ public class RunCommunicateWithServers {
 //        generator.start();
 //        Thread solver = new Thread(() -> solveSearchProblemServer.start());
 //        solver.start();
-//        mazeGeneratingServer.start();
-//        solveSearchProblemServer.start();
+        mazeGeneratingServer.start();
+        solveSearchProblemServer.start();
         //stringReverserServer.start();
         //Communicating with servers
-//         CommunicateWithServer_MazeGenerating();
+         CommunicateWithServer_MazeGenerating();
         CommunicateWithServer_SolveSearchProblem();
         //CommunicateWithServer_StringReverser();
         //Stopping all servers
-//        mazeGeneratingServer.stop();
-//        solveSearchProblemServer.stop();
+        mazeGeneratingServer.stop();
+        solveSearchProblemServer.stop();
         //stringReverserServer.stop();
     }
 
@@ -51,11 +50,11 @@ public class RunCommunicateWithServers {
                         toServer.writeObject(mazeDimensions); //send maze dimensions to server
                         toServer.flush();
                         byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor)from server
-                        InputStream is = new SimpleDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
+                        InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
                         byte[] decompressedMaze = new byte[2512 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
                         Maze maze = new Maze(decompressedMaze);
-                        maze.print();
+                        maze.printColored();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -78,7 +77,7 @@ public class RunCommunicateWithServers {
                         toServer.flush();
                         MyMazeGenerator mg = new MyMazeGenerator();
                         Maze maze = mg.generate(50, 50);
-                        maze.print();
+                        maze.printColored();
                         toServer.writeObject(maze); //send maze to server
                         toServer.flush();
                         Solution mazeSolution = (Solution) fromServer.readObject(); //read generated maze (compressed with MyCompressor)from server %s ", mazeSolution));
