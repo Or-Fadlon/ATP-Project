@@ -11,6 +11,7 @@ import java.net.SocketException;
  * generating maze server strategy
  */
 public class ServerStrategyGenerateMaze implements IServerStrategy {
+
     @Override
     public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
@@ -22,15 +23,16 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
             IMazeGenerator mazeGenerator = (IMazeGenerator) mazeGeneratorClass.getDeclaredConstructor().newInstance();
             Maze maze = mazeGenerator.generate(mazeDimensions[0], mazeDimensions[1]);
 
-            //TODO:COMPRESS BEFORE SEND!!
             ByteArrayOutputStream ba = new ByteArrayOutputStream();
             MyCompressorOutputStream compressorOutputStream = new MyCompressorOutputStream(ba);
             compressorOutputStream.write(maze.toByteArray());
-            //TODO: up don't look good but work
+            compressorOutputStream.flush();
+            compressorOutputStream.close();
 
             toClient.writeObject(ba.toByteArray());
             toClient.flush();
             toClient.close();
+            ba.close();
         } catch (SocketException e) {
             System.out.println("Lost connection with client");
         } catch (IOException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException
