@@ -63,14 +63,41 @@ public class Maze implements Serializable {
     }
 
     /**
+     * concatenate tro bytes Arrays
+     *
+     * @param a first array to concatenate
+     * @param b second array to concatenate
+     * @return concatenate array
+     */
+    private static byte[] concatenateArrays(byte[] a, byte[] b) {
+        byte[] result = new byte[a.length + b.length];
+        for (int i = 0; i < a.length; i++)
+            result[i] = a[i];
+        for (int i = 0; i < b.length; i++)
+            result[a.length + i] = b[i];
+        return result;
+    }
+
+    /**
+     * transfer base 127 into decimal number.
+     * maximum decimal number 16,256
+     *
+     * @param lsb the lsb of the 127 base number
+     * @param msb the msb of the 127 base number
+     * @return decimal number
+     */
+    private static int base127ToDecimal(byte lsb, byte msb) {
+        return msb * 127 + lsb;
+    }
+
+    /**
      * print a colored console view of the maze
      */
     public void printColored() {
-        String ans = "";
         if (this.getRowsSize() > 100 || this.getColumnsSize() > 100) {
             Scanner in = new Scanner(System.in);
             System.out.println("this maze is big, are you sure you want to print it? (y/n)");
-            ans = in.nextLine();
+            String ans = in.nextLine();
             if (!ans.equals("y") && !ans.equals("Y"))
                 return;
         }
@@ -120,11 +147,10 @@ public class Maze implements Serializable {
      * @param trace Positions to highlight
      */
     public void printColoredTrace(HashSet<Position> trace) {
-        String ans = "";
         if (this.getRowsSize() > 100 || this.getColumnsSize() > 100) {
             Scanner in = new Scanner(System.in);
             System.out.println("this maze is big, are you sure you want to print it? (y/n)");
-            ans = in.nextLine();
+            String ans = in.nextLine();
             if (!ans.equals("y") && !ans.equals("Y"))
                 return;
         }
@@ -178,7 +204,6 @@ public class Maze implements Serializable {
             throw new IllegalArgumentException("given position in not valid position in the maze");
         this.startPosition = new Position(position);
     }
-
 
     /**
      * @return the goal Position of the maze
@@ -465,31 +490,24 @@ public class Maze implements Serializable {
         return result;
     }
 
-    /**
-     * concatenate tro bytes Arrays
-     *
-     * @param a first array to concatenate
-     * @param b second array to concatenate
-     * @return concatenate array
-     */
-    private static byte[] concatenateArrays(byte[] a, byte[] b) {
-        byte[] result = new byte[a.length + b.length];
-        for (int i = 0; i < a.length; i++)
-            result[i] = a[i];
-        for (int i = 0; i < b.length; i++)
-            result[a.length + i] = b[i];
-        return result;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Maze maze = (Maze) o;
+        return Arrays.equals(this.toByteArray(), maze.toByteArray());
     }
 
-    /**
-     * transfer base 127 into decimal number.
-     * maximum decimal number 16,256
-     *
-     * @param lsb the lsb of the 127 base number
-     * @param msb the msb of the 127 base number
-     * @return decimal number
-     */
-    private static int base127ToDecimal(byte lsb, byte msb) {
-        return msb * 127 + lsb;
+    @Override
+    public int hashCode() {
+        return hashArray(this.toByteArray());
+    }
+
+    private int hashArray(byte[] array) {
+        int counter = 0;
+        if (array != null)
+            for (byte b : array) counter += b;
+        return counter;
     }
 }
