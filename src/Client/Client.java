@@ -5,11 +5,21 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.ConnectException;
 
+/**
+ * Client class - using strategy pattern
+ */
 public class Client {
     private final InetAddress serverIP;
     private final int serverPort;
     private final IClientStrategy strategy;
 
+    /**
+     * Client constructor
+     *
+     * @param serverIP   server ip
+     * @param serverPort server port
+     * @param strategy   client strategy - need to compatible with the server
+     */
     public Client(InetAddress serverIP, int serverPort, IClientStrategy strategy) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;

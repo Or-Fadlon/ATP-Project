@@ -4,13 +4,31 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+/**
+ * my compress output stream - decorator pattern.
+ * compress maze as byte Array.
+ */
 public class MyCompressorOutputStream extends OutputStream {
     private final OutputStream out;
 
+    /**
+     * Constructor
+     *
+     * @param out output stream to decorate
+     */
     public MyCompressorOutputStream(OutputStream out) {
         this.out = out;
     }
 
+    /**
+     * compress methode
+     * the meta data stay the same, the maze part is divided into chunks of 8.
+     * every 8 bytes in the array became one byte that represent as binary values.
+     * 0,0,0,0,1,1,0,1 -> 00001101 -> (13)
+     *
+     * @param bytes array of bytes represent maze
+     * @return compressed maze as array
+     */
     private static byte[] compress(byte[] bytes) {
         ArrayList<Byte> holder = new ArrayList<>(); //placeholder for our return array
 
@@ -34,6 +52,13 @@ public class MyCompressorOutputStream extends OutputStream {
         return gridAsArray;
     }
 
+    /**
+     * take 8 bytes that contains only 1 or 0, and makes them one byte
+     *
+     * @param array array of bytes in size 8
+     * @return one byte that represent the 8
+     * @throws IllegalArgumentException The given array length is bigger then 8
+     */
     private static byte toOneUnsignedByte(byte[] array) throws IllegalArgumentException {
         if (array.length > 8)
             throw new IllegalArgumentException("The given array length is bigger then 8");
@@ -45,7 +70,7 @@ public class MyCompressorOutputStream extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        //TODO: what we need to implement here????
+        this.write(b);
     }
 
     @Override

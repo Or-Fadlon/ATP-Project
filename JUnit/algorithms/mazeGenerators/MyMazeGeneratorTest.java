@@ -14,6 +14,7 @@ class MyMazeGeneratorTest {
     }
 
     Maze maze = mg.generate(1000, 1000);
+
     @Test
     void startEqualsGoal() {
         assertNotEquals(maze.getStartPosition(), maze.getGoalPosition());

@@ -43,22 +43,21 @@ public class Maze implements Serializable {
      * constructor
      * 0,1-row size. 2,3-column size. 4,5-start position row. 6,7-start position column.
      * 8,9-goal position row. 10,11-goal position column. 12+ -the maze
+     *
      * @param bytes in the format. first 12 cells using base 127
      * @throws IllegalArgumentException the array was given not in the right format.
      */
     public Maze(byte[] bytes) throws IllegalArgumentException {
         try {
-        this.grid = new int[base127ToDecimal(bytes[0], bytes[1])][base127ToDecimal(bytes[2], bytes[3])];
-        this.startPosition = new Position(base127ToDecimal(bytes[4], bytes[5]), base127ToDecimal(bytes[6], bytes[7]));
-        this.goalPosition = new Position(base127ToDecimal(bytes[8], bytes[9]), base127ToDecimal(bytes[10], bytes[11]));
+            this.grid = new int[base127ToDecimal(bytes[0], bytes[1])][base127ToDecimal(bytes[2], bytes[3])];
+            this.startPosition = new Position(base127ToDecimal(bytes[4], bytes[5]), base127ToDecimal(bytes[6], bytes[7]));
+            this.goalPosition = new Position(base127ToDecimal(bytes[8], bytes[9]), base127ToDecimal(bytes[10], bytes[11]));
 
-        int counter = 12;
-        for (int i=0; i<this.grid.length; i++)
-            for (int j=0; j<this.grid[0].length; j++)
-                this.grid[i][j] = bytes[counter++];
-        }
-        catch (IndexOutOfBoundsException e)
-        {
+            int counter = 12;
+            for (int i = 0; i < this.grid.length; i++)
+                for (int j = 0; j < this.grid[0].length; j++)
+                    this.grid[i][j] = bytes[counter++];
+        } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("the array was given not in the right format");
         }
     }
@@ -429,6 +428,7 @@ public class Maze implements Serializable {
      * meta data:
      * 0,1-row size. 2,3-column size. 4,5-start position row. 6,7-start position column.
      * 8,9-goal position row. 10,11-goal position column.
+     *
      * @return maze as an array of bytes, first 12 cells contains the meta data
      */
     public byte[] toByteArray() {
@@ -454,18 +454,20 @@ public class Maze implements Serializable {
     /**
      * transfer decimal number into base 127.
      * maximum number 16,256
+     *
      * @param num number to transfer (maximum 16,256)
      * @return 2 cells, 0-lsb 1-msb
      */
     private byte[] decimalToBase127(int num) {
         byte[] result = new byte[2];
         result[0] = (byte) (num % 127);
-        result[1] = (byte) ((num / 127)%127);
+        result[1] = (byte) ((num / 127) % 127);
         return result;
     }
 
     /**
      * concatenate tro bytes Arrays
+     *
      * @param a first array to concatenate
      * @param b second array to concatenate
      * @return concatenate array
@@ -482,6 +484,7 @@ public class Maze implements Serializable {
     /**
      * transfer base 127 into decimal number.
      * maximum decimal number 16,256
+     *
      * @param lsb the lsb of the 127 base number
      * @param msb the msb of the 127 base number
      * @return decimal number

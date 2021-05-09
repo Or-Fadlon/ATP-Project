@@ -4,9 +4,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+/**
+ * simple compress output stream - decorator pattern
+ * compress maze as byte Array.
+ */
 public class SimpleCompressorOutputStream extends OutputStream {
     private OutputStream out;
 
+    /**
+     * Constructor
+     *
+     * @param out output stream to decorate
+     */
     public SimpleCompressorOutputStream(OutputStream out) {
         this.out = out;
     }
@@ -23,33 +32,49 @@ public class SimpleCompressorOutputStream extends OutputStream {
         ArrayList<Byte> holder = new ArrayList<>(); //placeholder for our return array
         int counter = 0, //count the number of times Type appear in a sequence
                 countingType = 1; //1-wall, 0-tile
+
         //insert meta data
         for (int i = 0; i < 12; i++)
             holder.add(bytes[i]);
+
         //compress maze
         for (int i = 12; i < bytes.length; i++) {
             if (bytes[i] == countingType)
                 counter++;
             else {
-                while (counter >= 0) { //handle the insertion
-                    if (counter > 255) {
-                        holder.add(toUnsignedByte(255));
-                        holder.add((byte) 0);
-                    } else
-                        holder.add(toUnsignedByte(counter));
-                    counter -= 255;
-                }
+                addNumberToByteArray(holder, counter);
                 countingType = countingType == 1 ? 0 : 1; //change type
                 counter = 1;
             }
         }
-        holder.add(toUnsignedByte(counter));
+        addNumberToByteArray(holder, counter);
+
         //prepare the result array
         byte[] gridAsArray = new byte[holder.size()];
         for (int i = 0; i < gridAsArray.length; i++)
             gridAsArray[i] = holder.get(i);
 
         return gridAsArray;
+    }
+
+
+    /**
+     * adding natural number to ArrayList of bytes like its "unsigned-byte".
+     * if the number is bigger then 255 splits it and add 0 in middle.
+     * 256 -> 255,0,1
+     *
+     * @param holder
+     * @param counter
+     */
+    private static void addNumberToByteArray(ArrayList<Byte> holder, int counter) {
+        while (counter >= 0) {
+            if (counter > 255) {
+                holder.add(toUnsignedByte(255));
+                holder.add((byte) 0);
+            } else
+                holder.add(toUnsignedByte(counter));
+            counter -= 255;
+        }
     }
 
     /**
