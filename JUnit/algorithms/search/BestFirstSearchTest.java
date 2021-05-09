@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BestFirstSearchTest {
     MyMazeGenerator mg = new MyMazeGenerator();
-    Maze maze = mg.generate(100,100);
+    Maze maze = mg.generate(100, 100);
     SearchableMaze searchableMaze = new SearchableMaze(maze);
     BestFirstSearch searcher = new BestFirstSearch();
     Solution solution = searcher.solve(searchableMaze);
