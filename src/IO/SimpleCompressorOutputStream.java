@@ -63,17 +63,17 @@ public class SimpleCompressorOutputStream extends OutputStream {
      * if the number is bigger then 255 splits it and add 0 in middle.
      * 256 -> 255,0,1
      *
-     * @param holder
-     * @param counter
+     * @param holder ArrayList to add to
+     * @param number the number to add
      */
-    private static void addNumberToByteArray(ArrayList<Byte> holder, int counter) {
-        while (counter >= 0) {
-            if (counter > 255) {
+    private static void addNumberToByteArray(ArrayList<Byte> holder, int number) {
+        while (number >= 0) {
+            if (number > 255) {
                 holder.add(toUnsignedByte(255));
                 holder.add((byte) 0);
             } else
-                holder.add(toUnsignedByte(counter));
-            counter -= 255;
+                holder.add(toUnsignedByte(number));
+            number -= 255;
         }
     }
 
@@ -94,7 +94,7 @@ public class SimpleCompressorOutputStream extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        //TODO: what we need to implement here????
+        this.out.write(b);
     }
 
     @Override

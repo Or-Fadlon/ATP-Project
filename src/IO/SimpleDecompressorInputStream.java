@@ -73,7 +73,7 @@ public class SimpleDecompressorInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        return 0;
+        return this.in.read();
     }
 
     @Override
