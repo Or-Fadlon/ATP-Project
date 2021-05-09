@@ -8,60 +8,84 @@ import algorithms.search.Solution;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * solving maze server strategy
  */
-//TODO: re-document! maybe i should use the hase code
 public class ServerStrategySolveSearchProblem implements IServerStrategy {
-    private static int number = 0;
+    private static final String directoryPath = System.getProperty("java.io.tmpdir"); //temp folder
+    private int counter;
+    private HashSet<Integer> hashSet;
+
+    /**
+     * constructor
+     * load older mazes that solved before
+     */
+    public ServerStrategySolveSearchProblem() {
+        this.hashSet = new HashSet<>();
+        this.counter = 0;
+        Maze loadedMaze;
+        ObjectInputStream inMazeFile;
+        File file;
+        while (true) { //load all solved old
+            file = new File(directoryPath + "maze" + counter + ".maze");
+            if (file.exists()) {
+                try {
+                    inMazeFile = new ObjectInputStream(new FileInputStream(directoryPath + "maze" + counter + ".maze"));
+                    loadedMaze = (Maze) inMazeFile.readObject();
+                    hashSet.add(loadedMaze.hashCode());
+                    counter++;
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else
+                break;
+        }
+    }
 
     @Override
     public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
-        String tempDirectoryPath = System.getProperty("java.io.tmpdir"); //TODO: Remove ATP-Project
-        Solution solution = null;
+        Solution solution;
 
         try {
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
             Maze mazeFromClient = (Maze) fromClient.readObject();
 
-            solution = searchForOlderSolution(tempDirectoryPath, mazeFromClient);
+            solution = searchForOlderSolution(mazeFromClient);
 
-            if (solution == null)
-                solution = solveAndSave(tempDirectoryPath, mazeFromClient);
-
+            if (solution == null) {
+                solution = solveAndSave(mazeFromClient);
+            }
             toClient.writeObject(solution);
             toClient.flush();
             toClient.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
-        //TODO: DO WE NEED TO REMOVE ALL THE FILES WE CREATED????
     }
 
     /**
      * search for older solutions of the given maze.
      *
-     * @param DirectoryPath  the directory holds the old solutions
      * @param mazeFromClient maze to solve
      * @return Solution if found. otherwise - null
      */
-    private Solution searchForOlderSolution(String DirectoryPath, Maze mazeFromClient) {
+    private Solution searchForOlderSolution(Maze mazeFromClient) {
         Solution solution = null;
         byte[] mazeFromClientAsArray = mazeFromClient.toByteArray();
         try {
-            Maze loadedMaze;
-            ObjectInputStream inMazeFile;
-            for (int i = 0; i < number; i++) {
-                inMazeFile = new ObjectInputStream(new FileInputStream(DirectoryPath + "maze" + i + ".maze"));
-                loadedMaze = (Maze) inMazeFile.readObject();
-                //TODO: maybe i should compare maze size w/h first and then the all maze!
-                //TODO: maybe compare using hash code??
-                if (Arrays.equals(loadedMaze.toByteArray(), mazeFromClientAsArray)) {
-                    ObjectInputStream inSolutionFile = new ObjectInputStream(new FileInputStream(DirectoryPath + "solvedMaze" + i + ".solution"));
-                    System.out.println("SAME?!?!!?!?"); //TODO: remove
-                    return (Solution) inSolutionFile.readObject();
+            if (this.hashSet.contains(mazeFromClient.hashCode())) { //maybe solved
+                Maze loadedMaze;
+                ObjectInputStream inMazeFile;
+                for (int i = 0; i < counter; i++) { //search for solve
+                    inMazeFile = new ObjectInputStream(new FileInputStream(directoryPath + "maze" + i + ".maze"));
+                    loadedMaze = (Maze) inMazeFile.readObject();
+                    if (mazeFromClient.equals(loadedMaze)) {
+                        ObjectInputStream inSolutionFile = new ObjectInputStream(new FileInputStream(directoryPath + "solvedMaze" + i + ".solution"));
+                        return (Solution) inSolutionFile.readObject();
+                    }
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -73,13 +97,20 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     /**
      * solve given maze and save the solution to the directory
      *
-     * @param DirectoryPath  the directory holds the old solutions
      * @param mazeFromClient maze to solve
      * @return the given maze solution
      */
-    private Solution solveAndSave(String DirectoryPath, Maze mazeFromClient) {
+    private Solution solveAndSave(Maze mazeFromClient) {
         synchronized (this) {
-            Solution solution = null;
+            // now when this is lock recheck if we have older solution
+            Solution solution;
+            if (this.hashSet.contains(mazeFromClient.hashCode())) {
+                solution = searchForOlderSolution(mazeFromClient);
+                if (solution != null)
+                    return solution;
+            }
+
+
             try {
                 //create ISearchingAlgorithm class using the name that in configuration file to solve the maze with.
                 Class<?> mazeSearchClass = Class.forName("algorithms.search." + Configurations.getInstance().getMazeSearchingAlgorithm());
@@ -91,15 +122,16 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             }
             try {
                 // save maze to a file
-                ObjectOutputStream outToMazeFile = new ObjectOutputStream(new FileOutputStream(DirectoryPath + "maze" + number + ".maze"));
+                ObjectOutputStream outToMazeFile = new ObjectOutputStream(new FileOutputStream(directoryPath + "maze" + counter + ".maze"));
                 outToMazeFile.writeObject(mazeFromClient);
                 outToMazeFile.flush();
                 outToMazeFile.close();
                 // save Solution to a file
-                ObjectOutputStream outToSolutionFile = new ObjectOutputStream(new FileOutputStream(DirectoryPath + "solvedMaze" + number++ + ".solution"));
+                ObjectOutputStream outToSolutionFile = new ObjectOutputStream(new FileOutputStream(directoryPath + "solvedMaze" + counter++ + ".solution"));
                 outToSolutionFile.writeObject(solution);
                 outToSolutionFile.flush();
                 outToSolutionFile.close();
+                hashSet.add(mazeFromClient.hashCode());
             } catch (IOException e) {
                 e.printStackTrace();
             }
