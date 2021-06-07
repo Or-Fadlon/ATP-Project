@@ -38,6 +38,9 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
         } catch (IOException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException
                 | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Unexpected error!");
+            e.printStackTrace();
         }
     }
 }

@@ -73,29 +73,29 @@ public class GradesKeyTestA {
 
 
         // 1 : Generate My maze [2,2,2] and checking printing of maze
-        Maze3D myMaze2x2x2 = (new MyMaze3DGenerator()).generate(2, 2,2);
+        Maze3D myMaze2x2x2 = (new MyMaze3DGenerator()).generate(2, 2, 2);
         myMaze2x2x2.print();
         // 2 : Generate My maze [2,2,2] and checking printing of maze
-        Maze3D myMaze3x2x2 = (new MyMaze3DGenerator()).generate(3, 2,2);
+        Maze3D myMaze3x2x2 = (new MyMaze3DGenerator()).generate(3, 2, 2);
         myMaze3x2x2.print();
         // 3 : Generate My maze [2,3,2] and checking printing of maze
-        Maze3D myMaze2x3x2 = (new MyMaze3DGenerator()).generate(2, 3,2);
+        Maze3D myMaze2x3x2 = (new MyMaze3DGenerator()).generate(2, 3, 2);
         myMaze2x3x2.print();
         // 4 : Generate My maze [2,2,3] and checking printing of maze
-        Maze3D myMaze2x2x3 = (new MyMaze3DGenerator()).generate(2, 2,3);
+        Maze3D myMaze2x2x3 = (new MyMaze3DGenerator()).generate(2, 2, 3);
         myMaze2x2x3.print();
         // 5 : Generate My maze [3,3,3] and checking printing of maze
-        Maze3D myMaze3x3x3 = (new MyMaze3DGenerator()).generate(3, 3,3);
+        Maze3D myMaze3x3x3 = (new MyMaze3DGenerator()).generate(3, 3, 3);
         myMaze3x3x3.print();
         // 6 : Generate My maze [5,6,7] and checking printing of maze
-        Maze3D myMaze5x6x7 = (new MyMaze3DGenerator()).generate(5, 6,7);
+        Maze3D myMaze5x6x7 = (new MyMaze3DGenerator()).generate(5, 6, 7);
         myMaze5x6x7.print();
         // 7 : Generate My maze [47,57,67] and checking printing of maze
-        Maze3D myMaze47x57x67 = (new MyMaze3DGenerator()).generate(47, 57,67);
+        Maze3D myMaze47x57x67 = (new MyMaze3DGenerator()).generate(47, 57, 67);
         // 8 : Generate My maze [100,100,100] and checking printing of maze
-        Maze3D myMaze100x100x100 = (new MyMaze3DGenerator()).generate(100, 100,100);
+        Maze3D myMaze100x100x100 = (new MyMaze3DGenerator()).generate(100, 100, 100);
         // 9 : Checking 60 second for My maze [100,100,100]
-        long timeMy100x100x100 = (new MyMaze3DGenerator()).measureAlgorithmTimeMillis(100,100, 100);
+        long timeMy100x100x100 = (new MyMaze3DGenerator()).measureAlgorithmTimeMillis(100, 100, 100);
         System.out.println(timeMy100x100x100 + " -> " + (timeMy100x100x100 < 60000));
 
         ///

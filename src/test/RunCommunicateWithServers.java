@@ -23,7 +23,7 @@ public class RunCommunicateWithServers {
         Server mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
         Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
 //Starting servers
-//        mazeGeneratingServer.start();
+        mazeGeneratingServer.start();
         solveSearchProblemServer.start();
 //        Thread t = new Thread(() -> mazeGeneratingServer.start());
 //        t.start();
@@ -32,11 +32,11 @@ public class RunCommunicateWithServers {
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-//        for (int j = 0; j < 10; j++) {
-//            Thread a = new Thread(() -> CommunicateWithServer_MazeGenerating(1000, 1000));
-//            a.start();
-//        }
-        for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 30; j++) {
+            Thread a = new Thread(() -> CommunicateWithServer_MazeGenerating(1000, 1000));
+            a.start();
+        }
+        for (int i = 0; i < 30; i++) {
             Thread b = new Thread(() -> CommunicateWithServer_SolveSearchProblem(1000, 1000));
             b.start();
         }
