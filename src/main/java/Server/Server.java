@@ -1,5 +1,8 @@
 package Server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +19,7 @@ public class Server {
     private final IServerStrategy strategy; //Server strategy
     private final ExecutorService threadPool; // Thread pool
     private volatile boolean run = false; //Server run status
-
+    private final Logger LOG = LogManager.getLogger();
     /**
      * Server Constructor
      *
@@ -37,11 +40,11 @@ public class Server {
      */
     public void start() {
         if (this.run)
-            System.out.println("Server is running already");
+            LOG.info("Server is running already");
         else {
             Thread server = new Thread(() -> {
                 this.run();
-                System.out.println("Server stopped");
+                LOG.info("Server stopped");
             });
             server.start();
         }
@@ -54,23 +57,23 @@ public class Server {
         try {
             ServerSocket serverSocket = new ServerSocket(this.port);
             serverSocket.setSoTimeout(this.listeningIntervalMS);
-            System.out.println("Starting server at port = " + this.port);
+            LOG.info("Starting server at port = " + this.port);
             this.run = true;
 
             while (this.run) {
                 try {
                     Socket clientSocket = serverSocket.accept();
-                    System.out.println("Client accepted: " + clientSocket.toString());
+                    LOG.info("Client accepted: " + clientSocket.toString());
                     // Insert the new task into the thread pool
                     this.threadPool.execute(() -> handleClient(clientSocket));
                 } catch (SocketTimeoutException e) {
-                    System.out.println("Socket timeout");
+//                    System.out.println("Socket timeout");
                 }
             }
             serverSocket.close();
         } catch (IOException e) {
             this.run = false;
-            e.printStackTrace();
+            LOG.error(e.toString());
         }
     }
 
@@ -78,7 +81,7 @@ public class Server {
      * Stopping the running of the server.
      */
     public void stop() {
-        System.out.println("Stopping server...");
+        LOG.info("Stopping server...");
         this.run = false;
         this.threadPool.shutdownNow();
     }
@@ -94,9 +97,9 @@ public class Server {
             clientSocket.close();
         } catch (IOException e) {
             this.run = false;
-            e.printStackTrace();
+            LOG.error(e.toString());
         }
-        System.out.println("Done handling client: " + clientSocket.toString());
+        LOG.info("Done handling client: " + clientSocket.toString());
     }
 
 

@@ -13,7 +13,8 @@ import java.util.HashSet;
 /**
  * solving maze server strategy
  */
-public class ServerStrategySolveSearchProblem implements IServerStrategy {
+public class ServerStrategySolveSearchProblem extends AServerStrategy {
+
     private static final String directoryPath = System.getProperty("java.io.tmpdir"); //temp folder
     private int counter;
     private HashSet<Integer> hashSet;
@@ -37,7 +38,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
                     hashSet.add(loadedMaze.hashCode());
                     counter++;
                 } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    LOG.error(e.toString());
                 }
             } else
                 break;
@@ -62,7 +63,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             toClient.flush();
             toClient.close();
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            LOG.error(e.toString());
         }
     }
 
@@ -89,7 +90,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            LOG.error(e.toString());
         }
         return null;
     }
@@ -117,7 +118,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
                 ISearchingAlgorithm mazeSearchAlgorithm = (ISearchingAlgorithm) mazeSearchClass.getDeclaredConstructor().newInstance();
                 solution = mazeSearchAlgorithm.solve(new SearchableMaze(mazeFromClient));
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                LOG.error(e.toString());
                 return null;
             }
             try {
@@ -133,7 +134,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
                 outToSolutionFile.close();
                 hashSet.add(mazeFromClient.hashCode());
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(e.toString());
             }
             return solution;
         }

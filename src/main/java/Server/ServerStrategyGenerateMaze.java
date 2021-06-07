@@ -10,7 +10,7 @@ import java.net.SocketException;
 /**
  * generating maze server strategy
  */
-public class ServerStrategyGenerateMaze implements IServerStrategy {
+public class ServerStrategyGenerateMaze extends AServerStrategy {
 
     @Override
     public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
@@ -34,13 +34,13 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
             toClient.close();
             ba.close();
         } catch (SocketException e) {
-            System.out.println("Lost connection with client");
+            LOG.info("Lost connection with client " + outToClient.toString());
         } catch (IOException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException
                 | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            LOG.error(e.toString());
         } catch (Exception e) {
-            System.out.println("Unexpected error!");
-            e.printStackTrace();
+            LOG.error("Unexpected error!");
+            LOG.error(e.toString());
         }
     }
 }
