@@ -12,6 +12,10 @@ import java.net.SocketException;
  */
 public class ServerStrategyGenerateMaze extends AServerStrategy {
 
+    public ServerStrategyGenerateMaze() {
+        super("generate");
+    }
+
     @Override
     public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {
@@ -38,9 +42,11 @@ public class ServerStrategyGenerateMaze extends AServerStrategy {
         } catch (IOException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException
                 | InstantiationException | IllegalAccessException e) {
             LOG.error(e.toString());
+            e.printStackTrace();
         } catch (Exception e) {
             LOG.error("Unexpected error!");
             LOG.error(e.toString());
+            e.printStackTrace();
         }
     }
 }

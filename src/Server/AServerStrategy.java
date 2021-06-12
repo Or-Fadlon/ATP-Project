@@ -7,7 +7,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class AServerStrategy implements IServerStrategy{
-    protected Logger LOG = LogManager.getLogger(); //Logger
+    protected Logger LOG;
+    private String loggerName;
+
+    /**
+     * @param loggerName logger name to use
+     */
+    public AServerStrategy(String loggerName){
+        this.loggerName = loggerName;
+        this.LOG = LogManager.getLogger(loggerName);
+    }
+
+    public String getLoggerName(){
+        return this.loggerName;
+    }
 
     @Override
     public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {

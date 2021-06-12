@@ -19,7 +19,8 @@ public class Server {
     private final IServerStrategy strategy; //Server strategy
     private final ExecutorService threadPool; // Thread pool
     private volatile boolean run = false; //Server run status
-    private final Logger LOG = LogManager.getLogger();
+    private final Logger LOG;
+
     /**
      * Server Constructor
      *
@@ -32,6 +33,7 @@ public class Server {
         this.listeningIntervalMS = listeningIntervalMS;
         this.strategy = strategy;
         this.threadPool = Executors.newFixedThreadPool(Configurations.getInstance().getThreadPoolSize());
+        this.LOG = LogManager.getLogger(strategy.getLoggerName());
     }
 
     /**
@@ -74,6 +76,7 @@ public class Server {
         } catch (IOException e) {
             this.run = false;
             LOG.error(e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -98,6 +101,7 @@ public class Server {
         } catch (IOException e) {
             this.run = false;
             LOG.error(e.toString());
+            e.printStackTrace();
         }
         LOG.info("Done handling client: " + clientSocket.toString());
     }

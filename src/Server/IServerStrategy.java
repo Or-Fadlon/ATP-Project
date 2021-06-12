@@ -11,4 +11,6 @@ public interface IServerStrategy {
      * @param outToClient  output-stream to client
      */
     void ServerStrategy(InputStream inFromClient, OutputStream outToClient);
+
+    String getLoggerName();
 }

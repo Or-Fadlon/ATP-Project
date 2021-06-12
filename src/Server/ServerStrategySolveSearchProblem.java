@@ -15,7 +15,7 @@ import java.util.HashSet;
  */
 public class ServerStrategySolveSearchProblem extends AServerStrategy {
 
-    private static final String directoryPath = System.getProperty("java.io.tmpdir"); //temp folder
+    private static final String directoryPath = System.getProperty("java.io.tmpdir") + "Maze-Project\\"; //temp folder
     private int counter;
     private HashSet<Integer> hashSet;
 
@@ -24,11 +24,13 @@ public class ServerStrategySolveSearchProblem extends AServerStrategy {
      * load older mazes that solved before
      */
     public ServerStrategySolveSearchProblem() {
+        super("solve");
         this.hashSet = new HashSet<>();
         this.counter = 0;
         Maze loadedMaze;
         ObjectInputStream inMazeFile;
         File file;
+        new File(directoryPath).mkdir();
         while (true) { //load all solved old
             file = new File(directoryPath + "maze" + counter + ".maze");
             if (file.exists()) {
@@ -39,6 +41,8 @@ public class ServerStrategySolveSearchProblem extends AServerStrategy {
                     counter++;
                 } catch (IOException | ClassNotFoundException e) {
                     LOG.error(e.toString());
+                    e.printStackTrace();
+                    break;
                 }
             } else
                 break;
@@ -64,6 +68,7 @@ public class ServerStrategySolveSearchProblem extends AServerStrategy {
             toClient.close();
         } catch (ClassNotFoundException | IOException e) {
             LOG.error(e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -91,6 +96,7 @@ public class ServerStrategySolveSearchProblem extends AServerStrategy {
             }
         } catch (IOException | ClassNotFoundException e) {
             LOG.error(e.toString());
+            e.printStackTrace();
         }
         return null;
     }
@@ -119,6 +125,7 @@ public class ServerStrategySolveSearchProblem extends AServerStrategy {
                 solution = mazeSearchAlgorithm.solve(new SearchableMaze(mazeFromClient));
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 LOG.error(e.toString());
+                e.printStackTrace();
                 return null;
             }
             try {
@@ -135,6 +142,7 @@ public class ServerStrategySolveSearchProblem extends AServerStrategy {
                 hashSet.add(mazeFromClient.hashCode());
             } catch (IOException e) {
                 LOG.error(e.toString());
+                e.printStackTrace();
             }
             return solution;
         }
